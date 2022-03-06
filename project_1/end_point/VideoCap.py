@@ -17,6 +17,7 @@ class VideoCap:
             else:
                 print('Success!')
                 break
+
     def get_some_frame(self, frame_num = 5):
         self.frame_group.clear()
         _, frame = self.cap.read()
@@ -25,5 +26,6 @@ class VideoCap:
             self.frame_group.append(frame)
             cv2.waitKey(10)
         return self.frame_group
+        
     def release_cam(self):
         self.cap.release()
