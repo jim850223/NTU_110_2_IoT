@@ -16,13 +16,9 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<<<<<<< HEAD
   <link
     href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap"
     rel="stylesheet">
-=======
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
->>>>>>> 9011da85ce45a2f40da14e3a24b3041e6b571779
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -64,21 +60,14 @@
 
             <!-- 這列是決定能否動的重點 -->
             <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#tab-1">
-<<<<<<< HEAD
               <!-- <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#tab-1"> -->
 
               <i class="bi bi-bell color-red"></i>
               <h4>按鈴</h4>
-=======
-              
-              <i class="bi bi-binoculars color-cyan"></i>
-              <h4>門鈴</h4>
->>>>>>> 9011da85ce45a2f40da14e3a24b3041e6b571779
             </a>
           </li><!-- End Tab 1 Nav -->
 
           <li class="nav-item col-6 col-md-4 col-lg-2">
-<<<<<<< HEAD
 
             <!-- 依照data-bs-target決定跳出的頁面 -->
             <a class="nav-link" data-bs-toggle="tab" onclick="trigger();" data-bs-target="#tab-2">
@@ -146,64 +135,6 @@
 
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
-=======
-            
-            <!-- 依照data-bs-target決定跳出的頁面 -->
-            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-2">
-            
-              <i class="bi bi-box-seam color-indigo"></i>
-              <h4>開門</h4>
-            </a>
-          </li><!-- End Tab 2 Nav -->
-
-        </ul>
-
-        <div class="tab-content">
-          <div class="tab-pane active show" id="tab-1">
-            <div class="row gy-4">
-              <div class="col-lg-8 order-2 order-lg-1" data-aos="fade-up" data-aos-delay="100">
-                <h3>Modinest</h3>
-
-                <button type ="button" onclick="trigger();"> trigger </button>
-                <div id = "test">
-                <p class="fst-italic">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                  magna aliqua.
-                </p>
-              </div>
-
-
-              </div>
-
-            </div>
-          </div><!-- End Tab Content 1 -->
-
-          <div class="tab-pane" id="tab-2">
-            <div class="row gy-4">
-              <div class="col-lg-8 order-2 order-lg-1">
-                <h3>Undaesenti</h3>
-                <button type ="button" onclick="trigger();"> trigger </button>
-                <p>
-                  Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                  velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                  culpa qui officia deserunt mollit anim id est laborum
-                </p>
-
-              </div>
-
-            </div>
-            
-          </div><!-- End Tab Content 2 -->
-
-        </div>
-
-      </div>
-    </section><!-- End Features Section -->
-
-  </main><!-- End #main -->
-
-  <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
->>>>>>> 9011da85ce45a2f40da14e3a24b3041e6b571779
 
   <div id="preloader"></div>
 
@@ -219,7 +150,6 @@
   <script src="assets/js/main.js"></script>
 
   <script>
-<<<<<<< HEAD
 
 
     function print_some() {
@@ -263,33 +193,6 @@
 
 
   </script>
-=======
-    function trigger(){
-        var xhr = new XMLHttpRequest();
-        //if readystate equals 4, then it will response its content
-        xhr.onreadystatechange = function() {
-        if (this.readyState == 4 && xhr.status == 200) {
-
-            //for json
-            var object = JSON.parse(xhr.response);
-
-
-            console.log(this.response);
-            document.getElementById("test").innerHTML = xhr.response;
-        }
-    }
-    //xhr.open("GET", "./test.json" , true );
-    xhr.open("GET", "http://127.0.0.1:5000/store" , true );
-    
-
-    //the last variable is used to decide asynchronous or not
-    xhr.send();
-    //to send the request
-    }
-
-
-</script>
->>>>>>> 9011da85ce45a2f40da14e3a24b3041e6b571779
 
 
 </body>
