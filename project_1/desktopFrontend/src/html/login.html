@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="/bootstrap-5.1.3/css/bootstrap-magic-2022-03-03.css" rel="stylesheet">
+    <link href="/css/login.css" rel="stylesheet">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/login.js"></script>
+</head>
+<meta>
+  <meta name="viewport" content="width=device-width">
+    <form id="loginForm" class="form-login" method="post">
+      <h2 class="form-login-heading">Login</h2>
+      <label for="inputAccount" class="sr-only">Account</label>
+      <input type="text" id="inputAccount" class="form-control" name="account" placeholder="Account" required autofocus>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+    </form>
+  </meta>
+</body>
+</html>
