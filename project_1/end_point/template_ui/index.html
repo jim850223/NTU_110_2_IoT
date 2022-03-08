@@ -59,9 +59,7 @@
           <li class="nav-item col-6 col-md-4 col-lg-2">
 
             <!-- 這列是決定能否動的重點 -->
-            <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#tab-1">
-              <!-- <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#tab-1"> -->
-
+            <a class="nav-link active show" data-bs-toggle="tab" onclick="ring_bell_button()"; data-bs-target="#tab-1">
               <i class="bi bi-bell color-red"></i>
               <h4>按鈴</h4>
             </a>
@@ -70,7 +68,11 @@
           <li class="nav-item col-6 col-md-4 col-lg-2">
 
             <!-- 依照data-bs-target決定跳出的頁面 -->
-            <a class="nav-link" data-bs-toggle="tab" onclick="trigger();" data-bs-target="#tab-2">
+            <a class="nav-link" data-bs-toggle="tab" onclick="promise().then((GG) => {
+              console.log(GG);
+            }, (BB) => {
+              console.log(BB);
+            })" data-bs-target="#tab-2">
               <!-- 這邊使用function時要加上()，在script那邊則不需要 -->
 
               <i class="bi bi-easel color-orange"></i>
@@ -97,7 +99,7 @@
               <!--   <div class="tab-pane fade show active" id="tab-1"></div> -->
               <div class="p-5 mb-4 bg-light rounded-3">
                 <div class="container-fluid py-5">
-                  <h1 class="display-5 fw-bold">請稍等</h1>
+                  <h1 class="display-5 fw-bold" id = "bell_message">您好，請問能怎麼協助您</h1>
                 </div>
               </div>
             </div>
@@ -105,7 +107,7 @@
             <div class="tab-pane fade show" id="tab-2">
               <div class="p-5 mb-4 bg-light rounded-3">
                 <div class="container-fluid py-5">
-                  <h1 class="display-5 fw-bold">請按下按鈕錄音</h1>                  
+                  <h1 class="display-5 fw-bold">請按下按鈕錄音</h1>
                   <!-- <button type="button" onclick="trigger();"> 錄音 </button> -->
                 </div>
               </div>
@@ -114,13 +116,13 @@
             <div class="tab-pane fade show" id="tab-3">
               <div class="p-5 mb-4 bg-light rounded-3">
                 <div class="container-fluid py-5">
-                  <h1 class="display-5 fw-bold">請掃描QR CODE</h1>                  
+                  <h1 class="display-5 fw-bold">請掃描QR CODE</h1>
                 </div>
               </div>
             </div>
           </div>
 
-          <button type="button" onclick="init();"> init </button>
+          <button type="button" onclick="set_command_to_0();"> init </button>
           <div id="test">
             <p class="fst-italic">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
@@ -151,20 +153,184 @@
 
   <script>
 
+    var state = 0;
+    
+    var command_to_do;
+  
+    var command_parameters;
 
-    function print_some() {
-      console.log(n);
-      n = n + 1;
+    function set_command_to_0() {
+      command_to_do = 0;
     }
 
-    function print_some_2() {
-      console.log(n);
-      n = n + 1;
+  function call_Rpi_ring_bell(){ 
+  const uri = `http://127.0.0.1:5000/bell`;
+  fetch(uri, {method:'GET'})
+  .then(res => {
+    return res.text();   // 使用 text() 可以得到純文字 String
+  }).then(result => {
+    console.log(result); // 得到「你的名字是：oxxo，年紀：18 歲。」
+});
+}
+
+  function opendoor() {
+    console.log('open the door');
+    document.getElementById("bell_message").innerHTML = '已為您將門開啟';
+    //等待三秒
+    //document.getElementById("bell_message").innerHTML = '您好，請問能怎麼協助您';
+  }
+
+    //leave for Rpi to do
+    async function leave_message() {
+      console.log('timeout');
     }
 
-    setInterval(print_some, 1000);
-    setInterval(print_some_2, 500);
 
+    async function ring_bell_button() {
+      call_Rpi_ring_bell();
+      document.getElementById("bell_message").innerHTML = '請稍等';
+      //改畫面文字
+      
+      //await setTimeout(opendoor(),5000);      
+      
+      //console.log(command_to_do);
+      
+      //等待五秒後若無回應，則state改回0
+      console.log(1);
+      setTimeout(function(){ await leave_message()},2000);
+      console.log(2);
+      setTimeout(function(){ await leave_message()},2000);
+      console.log(3);
+      setTimeout(function(){ await leave_message()},2000);
+      console.log(4);
+      setTimeout(function(){ await leave_message()},2000);
+      console.log(5);
+
+      if (command_to_do == 'openDoor') {
+        opendoor();
+      }
+      else {
+        document.getElementById("bell_message").innerHTML = '主人未回應，請稍候再試';
+      
+        //再等候3秒，即跳回原本畫面
+        
+        //document.getElementById("bell_message").innerHTML = '您好，請問能怎麼協助您';
+      }
+    }
+
+    function comment_button() {
+      status = 2;
+    }
+
+    function sign_button() {
+      status = 3;
+    }
+
+    
+    function getDeviceCommand() {
+      /* get the status from the server */
+      const uri = `http://127.0.0.1:5000/device/1/commands`;
+      fetch(uri, {method:'GET'})
+      .then(res => {
+      return res.json();   // 使用 text() 可以得到純文字 String, json()可以獲得json
+      }).then(result => {
+        command_to_do = result.commands[0].action;
+        command_parameters = result.commands[0].parameters;
+        //console.log(command_to_do);
+      });
+/*       if (!command_to_do) {
+        //若沒有指令則command_to_do會變成undifined
+        console.log('cc');
+        //do nothing
+        }
+      else if (command_to_do == 'openDoor') {
+        opendoor();
+        document.getElementById("bell_message").innerHTML = '已為您將門打開';
+        //等待三秒後返回初始本畫面
+        state = 0;
+        //refresh the state to the beginning
+        //console.log(command_to_do);
+        command_to_do = 0;
+        //refresh the command
+        document.getElementById("bell_message").innerHTML = '您好，請問能怎麼協助您';
+      }
+      else if (command_to_do == 'setMessage') {
+        console.log(command_parameters);
+        state = 0;
+        command_to_do = 0;        
+      }
+
+      //else if (command_to_do == 'recivePackage') {
+      else {
+        console.log(command_parameters);
+        state = 0;
+        command_to_do = 0;        
+      } */
+    }
+    
+    setInterval(getDeviceCommand, 5000)
+
+
+    //main function of the html
+    function notify_and_get() {
+      //refresh_IO_state(); /* use if-else statement to determine whether to refresh IO state or not */
+      //updateDeviceState();
+      
+      getDeviceCommand();
+
+    }
+
+    //run the main function
+    //setInterval(notify_and_get, 500);
+
+    var forp = 1;
+    function random_print() {
+      console.log(forp);
+      setTimeout(() => {console.log(-1);{
+        forp = forp +1;
+      }}, 1500);
+      console.log(forp);
+      console.log(forp);
+      console.log(forp);
+      console.log(forp);
+      console.log(forp);
+    }
+    
+    random_print;
+    //the functino will never be operate unless you call it or use function like setInterval
+
+
+    //setInterval(random_print, 1000);
+    function whatever() {
+    console.log('開始');
+     setTimeout(() => {
+    console.log('非同步事件');
+    }, 0); 
+    console.log('程式碼結束');
+    }
+    
+    
+    function promise() {
+      return new Promise((resolve, reject) => {
+        var num = Math.random() > 0.5 ? 1 : 0;
+        if (num) {
+          resolve('成功');
+        }
+        reject('失敗')
+      });
+    }
+
+   /*  ~promise().then((success) => {
+      console.log(success);
+    }, (fail) => {
+      console.log(fail);
+    }) */
+    //add ~ in front of a function can run it at the begining
+      
+    
+  //setInterval(whatever, 1000)
+
+    
     
 
     function trigger() {
@@ -178,12 +344,11 @@
 
 
           console.log(this.response);
-          document.getElementById("test").innerHTML = xhr.response;
+          document.getElementById("bell_message").innerHTML = '請稍等';
         }
       }
       //xhr.open("GET", "./test.json" , true );
       xhr.open("GET", "http://127.0.0.1:5000/store", true);
-
 
 
       //the last variable is used to decide asynchronous or not
