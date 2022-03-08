@@ -40,13 +40,19 @@
         </ul>
         </div>
     </nav>
+    <div id="timeLabel"></div>
+    <div id="msg">
+    </div>
+        </div>
     <!-- 照片 -->
     <div class="jumbotron">
       <div class="container">
         <div class="row">
           <div class="col-md-7 jumbo-text">
+            <img id="photo" src="">
           </div>
         </div>
+        
       </div>
     </div>
     <div class="container">
@@ -66,10 +72,8 @@
         <div class="col-sm-4 panel-item">
           <div class="mbox">
             <div class="box-body">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-warning">開門</button>
-                    <button type="button" class="btn btn-danger">關閉通知</button>
-                </div>
+              <button id="btn_opendoor" type="button" class="btn btn-info">開門</button>
+              <button id="btn_recivePackage" type="button" class="btn btn-info" disabled>簽收</button>
             </div>
           </div>
         </div>

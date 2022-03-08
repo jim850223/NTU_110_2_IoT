@@ -3,7 +3,7 @@
 }
 
 .jumbotron {
-  background: url(https://scontent.ftpe7-4.fna.fbcdn.net/v/t1.6435-9/79515135_10111007623880301_5111576226921709568_n.jpg?_nc_cat=1&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=aaPGi44UsIsAX_BDJaI&_nc_ht=scontent.ftpe7-4.fna&oh=00_AT9t-yvLQWLmuVj9jNF9qBbZBJi4MCu7th6aboe5FBobYQ&oe=6248DDD6) no-repeat center center;
+  /* background: url(https://scontent.ftpe7-4.fna.fbcdn.net/v/t1.6435-9/79515135_10111007623880301_5111576226921709568_n.jpg?_nc_cat=1&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=aaPGi44UsIsAX_BDJaI&_nc_ht=scontent.ftpe7-4.fna&oh=00_AT9t-yvLQWLmuVj9jNF9qBbZBJi4MCu7th6aboe5FBobYQ&oe=6248DDD6) no-repeat center center; */
   background-size: cover;
   height: 400px;
   padding: 0;

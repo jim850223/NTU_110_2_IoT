@@ -93,15 +93,34 @@ function login(data)
 function sendMessage(message)
 {
     let data = {
-        "deviceId": "1",
         "action": "setMessage",
         "parameters": {
             "message": message
         }
     };
-    debugger
     let token = getCookie('token');
     let resText = httpPost("/api/device/1/commands", data, {'Authorization': token});
     let res = JSON.parse(resText);
     return res;
+}
+function openDoor()
+{
+    let data = {
+        "action": "openDoor",
+        "parameters": {}
+    };
+    let token = getCookie('token');
+    let resText = httpPost("/api/device/1/commands", data, {'Authorization': token});
+    let res = JSON.parse(resText);
+    return res;
+}
+function getNotify()
+{
+    let data = [];
+    let token = getCookie('token');
+    let resText = httpGet("/api/notify", {'Authorization': token});
+    let res = JSON.parse(resText);
+    if(Array.isArray(res.data))
+        data = res.data;
+    return data;
 }
