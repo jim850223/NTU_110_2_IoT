@@ -2,6 +2,8 @@ from flask import Flask,jsonify,request,render_template
 from flask_cors import CORS
 import requests
 import time
+import base64
+
 
 app = Flask(__name__)
 CORS(app)
@@ -21,21 +23,69 @@ def get_sign():
   return
   
 
+#測試server回覆之用
+@app.route('/device/1/commands')
+def return_command():
+  my_data = {
+  "code": 0,
+  "message": "success",
+  "commands": [
+    {
+      "userId": "r10525103",
+      "action": "openDoor",
+      "parameters": {},
+      "timestamp": "2022-03-08T03:23:54.855Z"
+    }
+  ]
+}
+  #r = requests.post('http://後端server', data = my_data)
+  #r = {'code': 0, 'message': 'success'}
+  return jsonify (my_data)
+  #return jsonify ({'code': 0, 'message': 'success'})
+
 @app.route('/bell')
 def ring_the_bell():
-  shoot_photo()
-  return
+  #做post,傳照片
 
-@app.route('/door')
-def ask_open_door():
-  shoot_photo()
-  return
+  #shoot_photo()
+  photo_to_encode = open("./Rz.jpg", "rb").read()
+  photo_base64 = base64.b64encode(photo_to_encode)
+  print(photo_base64)
+  
+  my_data = {
+    "deviceId": "1",
+    "type": "bell",
+    "photo": "./Rz.jpg",
+    "userId": "r10525114"
+    }
+  #r = requests.post('http://後端server', data = my_data)
+  r = {'code': 0, 'message': 'success'}
+  return r
+  #return jsonify ({'code': 0, 'message': 'success'})
 
 @app.route('/package')
 def sign_package():
   shoot_photo()
+  my_data = {
+    "deviceId": "1",
+    "type": "receivePackage",
+    "photo": "./Rz.jpg",
+    "userId": "r10525114"
+    }
   get_sign()
+  return jsonify ({'code': 0, 'message': 'success'})
+
+  
+
+@app.route('/door')
+def open_door():  
   return
+""" 
+@app.route('/package')
+def sign_package():
+  shoot_photo()
+  get_sign()
+  return """
 
 
 
@@ -44,15 +94,6 @@ def get_products():
     print(response.json())
 
 
-
-
-
-i = 1
-while (i < 3):
-  print(i)
-  i += 1
-  time.sleep(0.5)
-#You will never escape from above loop if you don't make the condition fail
 
 @app.route('/')
 def home():
@@ -83,8 +124,6 @@ va = 16
 
 #get /store
 @app.route('/store')
-
-
 def get_stores():
   print('You can print something there while calling the api')
   get_products()
