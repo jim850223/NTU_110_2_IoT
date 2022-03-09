@@ -24,7 +24,8 @@ const QRCode = require('qrcode');
 //
 const fs = require('fs'); 
 const path = require('path'); 
-  
+const cors = require('cors')
+
 
 //////////////////////////////////////////////////////////////////
 _commandMap = new Map(); // <device id, command[]>
@@ -37,6 +38,7 @@ app.use('/qrcode', express.static('qrcode'));
 //////////////////////////////////////////////////////////////////
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
+app.use(cors());
 
 app.use(expressJwt({
   secret: jwt_secret,
