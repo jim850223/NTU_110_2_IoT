@@ -34,6 +34,7 @@ _voiceMsgMap = new Map(); // <user id, msg[]>
 //////////////////////////////////////////////////////////////////
 app.use('/', express.static('src'));
 app.use('/data', express.static('data'));
+app.use('/qrcode', express.static('qrcode'));
 //////////////////////////////////////////////////////////////////
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
@@ -46,14 +47,14 @@ app.use(expressJwt({
   path: [
     '/api/user/login',
     '/index.html',
-    '/index2.html',
     '/login.html',
     '/test.html',
     {url: '/api/notify', methods: ['POST']},
     {url: '/api/voiceMsg', methods: ['POST']},
     {url: /^\/api\/device\/.*\/commands/, methods: ['GET']},
-    {url: /^\/api\/images\/.*/, methods: ['GET']},
-    {url: /^\/web\/.*/, methods: ['GET']},
+    {url: /^\/data\/.*/, methods: ['GET']},
+    {url: /^\/qrcode\/.*/, methods: ['GET']},
+  
   ]  
 }))
 //////////////////////////////////////////////////////////////////
@@ -85,14 +86,13 @@ function QQ(text){
     console.log(url);
   });
 }
-function QQ2(text){
+function QRCODE_SAVE(text, fileName){
   // 容錯率 L &lt; M &lt; Q &lt; H
   const opts = {
     errorCorrectionLevel: 'H',
     version: 2
   };
-  const path = 'qrcode.png';
-  QRCode.toFile(path, text, opts, (err)=>{
+  QRCode.toFile(fileName, text, opts, (err)=>{
     if (err) throw err;
     console.log('saved.');
   });
@@ -104,42 +104,30 @@ app.post('/api/user/login', (req, res) => {
   let message = '';
   let data = {};
   try{
-    let account = req.body.account;
+    let email = req.body.email;
     let pwd = req.body.password;
-    //check parameters
-    if(!chkPar(account) || !chkPar(pwd))
-      throw '請輸入帳號和密碼'
 
     //check user
-    let sha256_pwd = sha256(pwd + sha_salt);
-    //let userInfo = db.signIn(req.body.email, sha256_pwd);
-
-    let userInfo = {
-      "id": account,
-      "password": sha256_pwd,
-      "level": 0
-    }
+    //let sha256_pwd = sha256(pwd + sha_salt);
+    let userInfo = db.signIn(email, pwd);
+ 
     if(userInfo){
       // create token
-      const token = 'Bearer ' + jwt.sign({
-        "id": userInfo.id,
-        "password": sha256_pwd,
-        "level": userInfo.type
-      }, jwt_secret, {expiresIn: 3600 * 24 * 1});
-      data["id"] = userInfo.id;
+      const token = 'Bearer ' + jwt.sign(userInfo, jwt_secret, {expiresIn: 3600 * 24 * 1});
+      data["id"] = userInfo.id + '';
       data["token"] = token;
-      statusCode = 200;
+      statusCode = 0;
       message = "Login success";
     }else{
       statusCode = 401;
-      message = "Unknown e-mail or bad password";
+      message = "Unknown account or bad password";
     }
   }catch(e){
     statusCode = 400;
     message = e.message;
   }
   let res_json = createResponseJson(statusCode, message, data);
-  res.status(statusCode).json(res_json);
+  res.status(200).json(res_json);
 });
 
 app.get('/api/device/:id/commands', (req, res) => {
@@ -178,6 +166,12 @@ app.post('/api/device/:id/commands', (req, res) => {
     if(!_commandMap.has(deviceId)){
       _commandMap.set(deviceId, []);
     }
+    if(action == 'recivePackage'){
+      let qrfileName = `qrcode/${Date.now()}.png`
+      QRCODE_SAVE(Date.now()+'',qrfileName);
+      parameters = {'url': qrfileName};
+    }
+
     _commandMap.get(deviceId).push({
       "userId": deviceId,
       "action": action,
@@ -198,11 +192,20 @@ app.get('/api/notify', (req, res) => {
   let message = '';
   let data = [];
   try{
-    let userId = req.user.id;
+    let userId = req.user.id + '';
     if(_notifyMap.has(userId)){
       let notifys = _notifyMap.get(userId);
-      while(notifys.length > 0)
-        data.push(notifys.pop());
+      while(notifys.length > 0){
+        let notify = notifys.pop();
+        data.push(notify);
+        db.createLog({
+          'time': notify.timestamp,
+          'event': notify.type,
+          'url': notify.url,
+          'userId': userId,
+          'deviceId': notify.deviceId,
+        })
+      }
     }
     statusCode = 0;
   }catch(e){
@@ -217,13 +220,13 @@ app.post('/api/notify', (req, res) => {
   let message = '';
   let data = {};
   try{
-    let deviceId = req.body.deviceId;
+    let deviceId = req.body.deviceId + '';
     let notifyType = req.body.type;
-    let userId = req.body.userId;
+    let userId = req.body.userId + '';
     let photo = req.body.photo;
 
     let m = new Date();
-    let now = m.getUTCFullYear() +"/"+ (m.getUTCMonth()+1) +"/"+ m.getUTCDate() + " " + m.getUTCHours() + ":" + m.getUTCMinutes() + ":" + m.getUTCSeconds();
+    let now = m.getFullYear() +"/"+ (m.getMonth()+1) +"/"+ m.getDate() + " " + m.getHours() + ":" + m.getMinutes() + ":" + m.getSeconds();
    
     //儲存檔案
     let photo_fileName = `data/${Date.now()}.jpg`;
@@ -308,6 +311,37 @@ app.post('/api/voiceMsg', (req, res) => {
   }
   let res_json = createResponseJson(statusCode, message, data);
   res.status(200).json(res_json);
+});
+
+app.get('/api/logs', (req, res) => {
+  let statusCode = -1;
+  let message = '';
+  let data = [];
+  try{
+    let userId = req.user.id + '';
+    let logs = db.getLogs(userId);
+    if(logs)
+      data = logs;
+    statusCode = 0;
+  }catch(e){
+    message = e.message;
+  }
+  let res_json = createResponseJson(statusCode, message, data);
+  res.status(200).json(res_json);
+});
+
+//自動創建data資料夾
+fs.mkdir(path.join(__dirname, 'data'), (err) => { 
+  if (err) { 
+      return console.error(err); 
+  } 
+  console.log('Directory created successfully!'); 
+});
+fs.mkdir(path.join(__dirname, 'qrcode'), (err) => { 
+  if (err) { 
+      return console.error(err); 
+  } 
+  console.log('Directory created successfully!'); 
 });
 
 app.listen(port, ()=>console.log('sever run'));
