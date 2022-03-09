@@ -65,21 +65,6 @@
             </a>
           </li><!-- End Tab 1 Nav -->
 
-          <li class="nav-item col-6 col-md-4 col-lg-2">
-
-            <!-- 依照data-bs-target決定跳出的頁面 -->
-            <a class="nav-link" data-bs-toggle="tab" onclick="promise().then((GG) => {
-              console.log(GG);
-            }, (BB) => {
-              console.log(BB);
-            })" data-bs-target="#tab-2">
-              <!-- 這邊使用function時要加上()，在script那邊則不需要 -->
-
-              <i class="bi bi-easel color-orange"></i>
-              <h4>留言</h4>
-            </a>
-          </li><!-- End Tab 2 Nav -->
-          <!-- tab2用以測試oneclick是否能用在被定義好的class上 -->
 
           <li class="nav-item col-6 col-md-4 col-lg-2">
             <a class="nav-link" data-bs-toggle="tab" onclick="trigger();" data-bs-target="#tab-3">
@@ -99,15 +84,6 @@
               </div>
             </div>
 
-            <div class="tab-pane fade show" id="tab-2">
-              <div class="p-5 mb-4 bg-light rounded-3">
-                <div class="container-fluid py-5">
-                  <h1 class="display-5 fw-bold">請按下按鈕錄音</h1>
-                  <!-- <button type="button" onclick="trigger();"> 錄音 </button> -->
-                </div>
-              </div>
-            </div>
-
             <div class="tab-pane fade show" id="tab-3">
               <div class="p-5 mb-4 bg-light rounded-3">
                 <div class="container-fluid py-5">
@@ -115,15 +91,6 @@
                 </div>
               </div>
             </div>
-          </div>
-
-          <button type="button" onclick="set_command_to_0();"> init </button>
-          <div id="test">
-            <p class="fst-italic">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-              labore et dolore
-              magna aliqua.
-            </p>
           </div>
 
       </div>
@@ -172,16 +139,21 @@
   .then(res => {
     return res.text();   // 使用 text() 可以得到純文字 String
   }).then(result => {
-    console.log(result); // 得到「你的名字是：oxxo，年紀：18 歲。」
+    console.log(result);
 });
 }
 
 
 
   function opendoor() {
-    console.log('open the door');
-    document.getElementById("bell_message").innerHTML = '已為您將門開啟';  
-  }
+    console.log('ask for door-opening');
+    const uri = `http://127.0.0.1:5000/open_door`;
+    fetch(uri, {method:'GET'})
+    .then(res => {
+      return res.text();   // 使用 text() 可以得到純文字 String
+    }).then(result => {
+    console.log(result);    
+    });}
 
     //leave for Rpi to do
     function leave_message() {
@@ -197,6 +169,7 @@
     await delay(5000);
     if (command_to_do == 'openDoor') {    
       opendoor();
+      document.getElementById("bell_message").innerHTML = '已為您將門開啟';
       await delay(3000);
       state = 0;
       document.getElementById("bell_message").innerHTML = '您好，請問能怎麼協助您';

@@ -40,17 +40,27 @@ def shoot_photo():
 
 def open_door():
   print("Door opened")
-  for deg in degrees:
-    switch2deg(deg)
-    time.sleep(0.5)
-  pwm.stop()
-  GPIO.cleanup()
+  #for deg in degrees:
+   # switch2deg(deg)
+   # time.sleep(0.5)
+  #pwm.stop()
+  #GPIO.cleanup()
+
+
 
 
 def get_sign():
   return
 
 
+@app.route('/open_door')
+def door():
+  #for deg in degrees:
+   # switch2deg(deg)
+    #time.sleep(0.5)
+  #pwm.stop()
+  #GPIO.cleanup()
+  return 'Rpi has opend the door'
   
 
 #測試server回覆之用
@@ -68,31 +78,29 @@ def return_command():
     }
   ]
 }
+  return jsonify (my_data)
   #r = requests.post('http://後端server', data = my_data)
   #r = {'code': 0, 'message': 'success'}
-  return jsonify (my_data)
   #return jsonify ({'code': 0, 'message': 'success'})
 
 @app.route('/bell')
-def ring_the_bell():
+def notify_the_bell():
   #做post,傳照片
-
-  #shoot_photo()
-  photo_to_encode = open("./local_photo/guest.jpg", "rb").read()
-  photo_base64 = base64.b64encode(photo_to_encode)
+  shoot_photo()
+  #photo_to_encode = open("./local_photo/guest.jpg", "rb").read()
+  #photo_base64 = base64.b64encode(photo_to_encode)
 
   #my_data = {'deviceId': 1, 'type': 'bell', 'photo': photo_base64, 'userId': 'r10525114'}
   my_data = {'deviceId': 1, 'type': 'bell', 'userId': 'r10525114'}
   #base64的資料型態為byte，包含在json檔中，故若要轉檔會一直失敗
   
-  print(type(photo_base64))
+  #print(type(photo_base64))
   #my_data = {'id': 1, 'name': 'ram sharma'}
   print(type(my_data))
   j = json.dumps(my_data)
   print(type(j))
   #r = requests.post('http://127.0.0.1:3000/api/notify', json = my_data)
   #print(r)
-  print(66666666666666)
   return 'ok'
   #return jsonify ({'code': 0, 'message': 'success'})
 
@@ -107,18 +115,6 @@ def sign_package():
     }
   get_sign()
   return jsonify ({'code': 0, 'message': 'success'})
-
-  
-
-@app.route('/door')
-def door():  
-  return
-""" 
-@app.route('/package')
-def sign_package():
-  shoot_photo()
-  get_sign()
-  return """
 
 
 
