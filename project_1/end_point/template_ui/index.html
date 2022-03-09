@@ -59,7 +59,7 @@
           <li class="nav-item col-6 col-md-4 col-lg-2">
 
             <!-- 這列是決定能否動的重點 -->
-            <a class="nav-link active show" data-bs-toggle="tab" onclick="ring_bell_button()"; data-bs-target="#tab-1">
+            <a class="nav-link active show" data-bs-toggle="tab" onclick="ring_bell_button()" ; data-bs-target="#tab-1">
               <i class="bi bi-bell color-red"></i>
               <h4>按鈴</h4>
             </a>
@@ -67,7 +67,7 @@
 
 
           <li class="nav-item col-6 col-md-4 col-lg-2">
-            <a class="nav-link" data-bs-toggle="tab" onclick="trigger();" data-bs-target="#tab-3">
+            <a class="nav-link" data-bs-toggle="tab" onclick="sign_button();" data-bs-target="#tab-3">
               <i class="bi bi-box-seam color-indigo"></i>
               <h4>包裹簽收</h4>
             </a>
@@ -79,15 +79,19 @@
               <!--   <div class="tab-pane fade show active" id="tab-1"></div> -->
               <div class="p-5 mb-4 bg-light rounded-3">
                 <div class="container-fluid py-5">
-                  <h1 class="display-5 fw-bold" id = "bell_message">您好，請問能怎麼協助您</h1>
+                  <h1 class="display-5 fw-bold" id="bell_message">您好，請問能怎麼協助您</h1>
+                  <!-- <button type="button" class="btn btn-primary">Primary</button> -->
                 </div>
               </div>
             </div>
-
+            
             <div class="tab-pane fade show" id="tab-3">
               <div class="p-5 mb-4 bg-light rounded-3">
                 <div class="container-fluid py-5">
-                  <h1 class="display-5 fw-bold">請掃描QR CODE</h1>
+                  <h1 class="display-5 fw-bold" id="package_message">請掃描QR CODE</h1>
+                  <p class="attr-value" id="attr-value"></p>
+                  
+                  <!-- <img src="http://127.0.0.1:3000/qrcode/1646822028916.png" alt="Girl in a jacket" width="150" height="150"> -->
                 </div>
               </div>
             </div>
@@ -115,91 +119,125 @@
 
   <script>
 
-    async function prototype() {const delay = (s) => {
-    return new Promise(function(resolve){  // 回傳一個 promise
-      setTimeout(resolve,s);               // 等待多少秒之後 resolve()
-    });
-  };
-  
-  await delay(1000);
+    async function prototype() {
+      const delay = (s) => {
+        return new Promise(function (resolve) {  // 回傳一個 promise
+          setTimeout(resolve, s);               // 等待多少秒之後 resolve()
+        });
+      };
 
-  await delay(2000);  
-}
+      await delay(1000);
+
+      await delay(2000);
+    }
 
     var state = 0;
     //0 means there is no job to do, 1 is opposite to 0
-    
+
     var command_to_do;
     var command_parameters;
     var message;
 
-  function call_Rpi_ring_bell(){ 
-  const uri = `http://127.0.0.1:5000/bell`;
-  fetch(uri, {method:'GET'})
-  .then(res => {
-    return res.text();   // 使用 text() 可以得到純文字 String
-  }).then(result => {
-    console.log(result);
-});
-}
+    function call_Rpi_ring_bell() {
+      const uri = `http://127.0.0.1:5000/bell`;
+      fetch(uri, { method: 'GET' })
+        .then(res => {
+          return res.text();   // 使用 text() 可以得到純文字 String
+        }).then(result => {
+          console.log(result);
+        });
+    }
+
+    function call_Rpi_to_sign_package() {
+      const uri = `http://127.0.0.1:5000/package`;
+      fetch(uri, { method: 'GET' })
+        .then(res => {
+          return res.text();
+        }).then(result => {
+          console.log(result);
+        });
+    }
 
 
-
-  function opendoor() {
-    console.log('ask for door-opening');
-    const uri = `http://127.0.0.1:5000/open_door`;
-    fetch(uri, {method:'GET'})
-    .then(res => {
-      return res.text();   // 使用 text() 可以得到純文字 String
-    }).then(result => {
-    console.log(result);    
-    });}
+    function opendoor() {
+      console.log('ask for door-opening');
+      const uri = `http://127.0.0.1:5000/open_door`;
+      fetch(uri, { method: 'GET' })
+        .then(res => {
+          return res.text();   // 使用 text() 可以得到純文字 String
+        }).then(result => {
+          console.log(result);
+        });
+    }
 
     //leave for Rpi to do
     function leave_message() {
     }
 
 
-  async function ring_bell_button() {const delay = (s) => {
-    return new Promise(function(resolve){  // 回傳一個 promise
-      setTimeout(resolve,s);               // 等待多少秒之後 resolve()
-    });};
-    call_Rpi_ring_bell();
-    document.getElementById("bell_message").innerHTML = '響鈴中，請稍等';
-    await delay(5000);
-    if (command_to_do == 'openDoor') {    
-      opendoor();
-      document.getElementById("bell_message").innerHTML = '已為您將門開啟';
-      await delay(3000);
-      state = 0;
-      document.getElementById("bell_message").innerHTML = '您好，請問能怎麼協助您';
-    }
-    else if (command_to_do == 'setMessage') {
-      document.getElementById("bell_message").innerHTML = message;
-      await delay(5000);
-      state = 0;
-      document.getElementById("bell_message").innerHTML = '您好，請問能怎麼協助您';  
-    }
-    else {
-      document.getElementById("bell_message").innerHTML = '主人未回應，請稍候再試';
-      await delay(3000);  
-      state = 0;
-      document.getElementById("bell_message").innerHTML = '您好，請問能怎麼協助您';
-    }
-    message = 0;
-    command_to_do = 0;
-    //參數歸零
-  }
-
-    function comment_button() {
-      status = 2;
+    async function ring_bell_button() {
+      const delay = (s) => {
+        return new Promise(function (resolve) {  // 回傳一個 promise
+          setTimeout(resolve, s);               // 等待多少秒之後 resolve()
+        });
+      };
+      call_Rpi_ring_bell();
+      document.getElementById("bell_message").innerHTML = '響鈴中，請稍等';
+      await delay(10000);
+      if (command_to_do == 'openDoor') {
+        opendoor();
+        document.getElementById("bell_message").innerHTML = '已為您將門開啟';
+        await delay(5000);
+        state = 0;
+        document.getElementById("bell_message").innerHTML = '您好，請問能怎麼協助您';
+      }
+      else if (command_to_do == 'setMessage') {
+        document.getElementById("bell_message").innerHTML = message;
+        await delay(5000);
+        state = 0;
+        document.getElementById("bell_message").innerHTML = '您好，請問能怎麼協助您';
+      }
+      else {
+        document.getElementById("bell_message").innerHTML = '主人未回應，請稍候再試';
+        await delay(5000);
+        state = 0;
+        document.getElementById("bell_message").innerHTML = '您好，請問能怎麼協助您';
+      }
+      message = 0;
+      command_to_do = 0;
+      //參數歸零
     }
 
-    function sign_button() {
-      status = 3;
+    async function sign_button() {
+      const delay = (s) => {
+        return new Promise(function (resolve) {  // 回傳一個 promise
+          setTimeout(resolve, s);               // 等待多少秒之後 resolve()
+        });
+      };
+      call_Rpi_to_sign_package();
+      document.getElementById("package_message").innerHTML = '通知簽收包裹中，請稍等';
+      await delay(10000);
+      if (command_to_do == 'recivePackage') {
+        opendoor();
+        document.getElementById("package_message").innerHTML = '請掃描QR Code';
+        document.getElementById("attr-value").innerHTML = '<img src="http://127.0.0.1:3000/qrcode/1646822028916.png" alt="Girl in a jacket" width="150" height="150">'
+        await delay(15000);
+        state = 0;
+        document.getElementById("package_message").innerHTML = '您好，請問能怎麼協助您';
+        document.getElementById("attr-value").innerHTML = '';
+
+      }
+      else {
+        document.getElementById("package_message").innerHTML = '主人未回應，請稍候再試';
+        await delay(5000);
+        state = 0;
+        document.getElementById("package_message").innerHTML = '您好，請問能怎麼協助您';
+      }
+      message = 0;
+      command_to_do = 0;
+      //參數歸零
     }
 
-    
     function getDeviceCommand() {
       /* get the status from the server */
       const uri = `http://127.0.0.1:3000/api/device/1/commands`;
@@ -208,26 +246,26 @@
       //const uri = `http://127.0.0.1:5000/device/1/commands`;
       //測試用api，用以返回開門狀態
 
-      fetch(uri, {method:'GET'})
-      .then(res => {
-      return res.json();   // 使用 text() 可以得到純文字 String, json()可以獲得json
-      }).then(result => {
+      fetch(uri, { method: 'GET' })
+        .then(res => {
+          return res.json();   // 使用 text() 可以得到純文字 String, json()可以獲得json
+        }).then(result => {
 
-        console.log(!result.data[0]);
-        //沒有action時，!result.data[0]為true
+          console.log(!result.data[0]);
+          //沒有action時，!result.data[0]為true
+          console.log(result.data);
+          if (state == 0 && result.data[0]) {
+            state = 1;
 
-        if (state == 0 && result.data[0] ){
-          state = 1;
-          
-          command_to_do = result.data[0].action;
-          console.log(command_to_do);          
-          
-          message = result.data[0].parameters.message;
-          console.log(message); 
-        }
-      });
+            command_to_do = result.data[0].action;
+            console.log(command_to_do);
+
+            message = result.data[0].parameters.message;
+            console.log(message);
+          }
+        });
     }
-    
+
     setInterval(getDeviceCommand, 1000)
 
   </script>
