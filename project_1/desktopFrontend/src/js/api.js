@@ -114,11 +114,32 @@ function openDoor()
     let res = JSON.parse(resText);
     return res;
 }
+function recivePackage()
+{
+    let data = {
+        "action": "recivePackage",
+        "parameters": {}
+    };
+    let token = getCookie('token');
+    let resText = httpPost("/api/device/1/commands", data, {'Authorization': token});
+    let res = JSON.parse(resText);
+    return res;
+}
 function getNotify()
 {
     let data = [];
     let token = getCookie('token');
     let resText = httpGet("/api/notify", {'Authorization': token});
+    let res = JSON.parse(resText);
+    if(Array.isArray(res.data))
+        data = res.data;
+    return data;
+}
+function getLogs()
+{
+    let data = [];
+    let token = getCookie('token');
+    let resText = httpGet("/api/logs", {'Authorization': token});
     let res = JSON.parse(resText);
     if(Array.isArray(res.data))
         data = res.data;

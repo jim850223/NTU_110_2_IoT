@@ -18,7 +18,8 @@ $(document).ready(function(c) {
   let sel_msg = document.getElementById('sel_msg');
   let btn_sendMsg = document.getElementById('btn_sendMsg');
   let btn_opendoor = document.getElementById('btn_opendoor');
-  let btn_recivePackage = document.getElementById('btn_recivePackage');
+  let btn_recivePackage1 = document.getElementById('btn_recivePackage1');
+  let btn_recivePackage2 = document.getElementById('btn_recivePackage2');
   let photo = document.getElementById('photo');
   let timeLabel = document.getElementById('timeLabel');
   let msg = document.getElementById('msg');
@@ -27,7 +28,10 @@ $(document).ready(function(c) {
     let ret = sendMessage(selText);
   }
   btn_opendoor.onclick = openDoor;
-
+  btn_recivePackage2.onclick = ()=>{
+    let ret = recivePackage();
+    btn_recivePackage1.disabled = true;
+  } 
 
 
   //檢查notify
@@ -48,7 +52,7 @@ $(document).ready(function(c) {
         case 'recivePackage':
           photo.src = `/${notify.url}`;
           timeLabel.innerText = notify.timestamp
-          btn_recivePackage.disabled = false;
+          btn_recivePackage1.disabled = false;
           msg.innerHTML = `<div class="alert alert-primary" role="alert" >
           ${"包裹簽收請求"}
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
