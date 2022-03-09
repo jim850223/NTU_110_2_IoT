@@ -5,9 +5,6 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const app = express();
 const port = 3000;
-var cors = require('cors')
-app.use(cors())
-
 
 //jwt
 const expressJwt = require('express-jwt');
