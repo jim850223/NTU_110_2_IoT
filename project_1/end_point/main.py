@@ -74,7 +74,7 @@ def notify_the_bell():
   #後面decode部分是要解決預設編碼b64的編碼會話前綴b'，用需用decode把他拔掉
 
   #print(photo_str)
-  my_data = {'deviceId': 1, 'type': 'bell', 'photo': photo_str, 'userId': 'r10525114'}    
+  my_data = {'deviceId': 1, 'type': 'bell', 'photo': photo_str, 'userId': '1'}    
   my_data_json = json.dumps(my_data) 
     
   r = requests.post('http://127.0.0.1:3000/api/notify', data = my_data_json, headers = {"Content-Type":"application/json;charset=UTF-8"})
@@ -85,28 +85,29 @@ def notify_the_bell():
   #以上兩種寫法都可以，若用data = ，必須要包含header才會被判定為json，若用json=，則不需要轉檔案即可丟出。且在json=的狀態下，不能放json檔，一定要放非json的檔案，讓程式幫你自動轉換
   
   print(r.json())
-  return 'ok'
+  return 'belling'
   
 
 @app.route('/package')
 def sign_package():
-
+  #shoot_photo()
   photo_to_encode = open("./local_photo/guest.jpg", "rb").read()
   photo_base64 = base64.b64encode(photo_to_encode)
   photo_str = str(photo_base64.decode("UTF-8"))
 
-  my_data = {'deviceId': 1, 'type': 'recivePackage', 'photo': photo_str, 'userId': 'r10525114'}    
-  my_data_json = json.dumps(my_data) 
+  my_data = {'deviceId': 1, 'type': 'recivePackage', 'photo': photo_str, 'userId': '1'}    
+  #my_data_json = json.dumps(my_data) 
+  print(my_data)
     
-  r = requests.post('http://127.0.0.1:3000/api/notify', data = my_data_json, headers = {"Content-Type":"application/json;charset=UTF-8"})
+  #r = requests.post('http://127.0.0.1:3000/api/notify', data = my_data_json, headers = {"Content-Type":"application/json;charset=UTF-8"})
   #必加入header，否則會一直失敗
-  print(r.json())
+  #print(r.json())
   
-  #r = requests.post('http://127.0.0.1:3000/api/notify', json = my_data)
+  r = requests.post('http://127.0.0.1:3000/api/notify', json = my_data)
   #以上兩種寫法都可以，若用data = ，必須要包含header才會被判定為json，若用json=，則不需要轉檔案即可丟出。且在json=的狀態下，不能放json檔，一定要放非json的檔案，讓程式幫你自動轉換
   
   print(r.json())
-  return 'ok'
+  return 'calling for package'
 
 
 
