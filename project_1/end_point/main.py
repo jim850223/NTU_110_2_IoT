@@ -7,6 +7,7 @@ import json
 #from picamera import PiCamera
 #import RPi.GPIO as GPIO
 
+#GPIO.setmode(GPIO.BCM)
 app = Flask(__name__)
 CORS(app)
 
@@ -108,6 +109,32 @@ def sign_package():
   
   print(r.json())
   return 'calling for package'
+
+@app.route('/record')
+def record():
+  #shoot_photo()
+  photo_to_encode = open("./local_photo/guest.jpg", "rb").read()
+  photo_base64 = base64.b64encode(photo_to_encode)
+  photo_str = str(photo_base64.decode("UTF-8"))
+  
+  voice_to_encode = open("./voiceMsg/voiceMsg.mp3", "rb").read()
+  voice_base64 = base64.b64encode(voice_to_encode)
+  voice_str = str(voice_base64.decode("UTF-8"))
+
+
+  my_data = {'deviceId': 1, 'type': 'voiceMsg', 'photo': photo_str, 'voice': voice_str, 'userId': '1'}    
+  #my_data_json = json.dumps(my_data) 
+  print(my_data)
+    
+  #r = requests.post('http://127.0.0.1:3000/api/notify', data = my_data_json, headers = {"Content-Type":"application/json;charset=UTF-8"})
+  #必加入header，否則會一直失敗
+  #print(r.json())
+  
+  r = requests.post('http://127.0.0.1:3000/api/voiceMsg', json = my_data)
+  #以上兩種寫法都可以，若用data = ，必須要包含header才會被判定為json，若用json=，則不需要轉檔案即可丟出。且在json=的狀態下，不能放json檔，一定要放非json的檔案，讓程式幫你自動轉換
+  
+  print(r.json())
+  return 'calling for record'
 
 
 

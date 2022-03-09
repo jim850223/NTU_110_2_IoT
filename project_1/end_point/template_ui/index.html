@@ -64,7 +64,13 @@
               <h4>按鈴</h4>
             </a>
           </li><!-- End Tab 1 Nav -->
-
+          
+          <li class="nav-item col-6 col-md-4 col-lg-2">
+            <a class="nav-link" data-bs-toggle="tab" onclick="voice_message_button();" data-bs-target="#tab-2">
+              <i class="bi bi-volume-up-fill color-black"></i>
+              <h4>語音留言</h4>
+            </a>
+          </li><!-- End Tab 3 Nav -->
 
           <li class="nav-item col-6 col-md-4 col-lg-2">
             <a class="nav-link" data-bs-toggle="tab" onclick="sign_button();" data-bs-target="#tab-3">
@@ -84,6 +90,17 @@
                 </div>
               </div>
             </div>
+
+            <div class="tab-pane fade show" id="tab-2">
+              <div class="p-5 mb-4 bg-light rounded-3">
+                <div class="container-fluid py-5">
+                  <h1 class="display-5 fw-bold" id="voice_message">您好，請問能怎麼協助您</h1>              
+                  <h1 class="attr-value" id="voice-msg"></h1>
+                </div>
+              </div>
+            </div>
+
+
             
             <div class="tab-pane fade show" id="tab-3">
               <div class="p-5 mb-4 bg-light rounded-3">
@@ -157,6 +174,17 @@
           console.log(result);
         });
     }
+
+    function call_Rpi_to_record() { 
+      const uri = `http://127.0.0.1:5000/record`;
+      fetch(uri, { method: 'GET' })
+        .then(res => {
+          return res.text();
+        }).then(result => {
+          console.log(result);
+        });
+    }
+    
 
 
     function opendoor() {
@@ -238,6 +266,40 @@
       //參數歸零
     }
 
+    async function voice_message_button() {
+      const delay = (s) => {
+        return new Promise(function (resolve) {  // 回傳一個 promise
+          setTimeout(resolve, s);               // 等待多少秒之後 resolve()
+        });
+      };
+      call_Rpi_to_record();
+      document.getElementById("voice_message").innerHTML = '請稍等';
+      await delay(3000);
+      //if (command_to_do == 'voiceMsg') {
+      if (1) {
+        
+        document.getElementById("voice_message").innerHTML = '開始錄音10秒';
+        for (var i = 1; i < 11; i++){
+          document.getElementById("voice-msg").innerHTML = 11-i;
+          await delay(1000);                      
+        }        
+        await delay(1000);
+        document.getElementById("voice-msg").innerHTML =''
+        document.getElementById("voice_message").innerHTML = '已將訊息傳送給主人';        
+        await delay(3000);
+        document.getElementById("voice_message").innerHTML = '您好，請問能怎麼協助您';
+      }
+      else {
+        document.getElementById("voice_message").innerHTML = '沒有回應';        
+        await delay(3000);
+        document.getElementById("voice_message").innerHTML = '您好，請問能怎麼協助您';                    
+        document.getElementById("voice-msg").innerHTML =''
+      }
+      message = 0;
+      command_to_do = 0;
+      //參數歸零
+    }
+    
     function getDeviceCommand() {
       /* get the status from the server */
       const uri = `http://127.0.0.1:3000/api/device/1/commands`;
