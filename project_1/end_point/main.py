@@ -72,11 +72,11 @@ def notify_the_bell():
   my_data = {'deviceId': 1, 'type': 'bell', 'photo': photo_str, 'userId': '1'}    
   my_data_json = json.dumps(my_data) 
     
-  r = requests.post('http://127.0.0.1:3000/api/notify', data = my_data_json, headers = {"Content-Type":"application/json;charset=UTF-8"})
+  r = requests.post('http://192.168.22.41/api/notify', data = my_data_json, headers = {"Content-Type":"application/json;charset=UTF-8"})
   #必加入header，否則會一直失敗
   print(r.json())
   
-  #r = requests.post('http://127.0.0.1:3000/api/notify', json = my_data)
+  #r = requests.post('http://192.168.22.41/api/notify', json = my_data)
   #以上兩種寫法都可以，若用data = ，必須要包含header才會被判定為json，若用json=，則不需要轉檔案即可丟出。且在json=的狀態下，不能放json檔，一定要放非json的檔案，讓程式幫你自動轉換
   
   print(r.json())
@@ -94,11 +94,11 @@ def sign_package():
   #my_data_json = json.dumps(my_data) 
   print(my_data)
     
-  #r = requests.post('http://127.0.0.1:3000/api/notify', data = my_data_json, headers = {"Content-Type":"application/json;charset=UTF-8"})
+  #r = requests.post('http://192.168.22.41/api/notify', data = my_data_json, headers = {"Content-Type":"application/json;charset=UTF-8"})
   #必加入header，否則會一直失敗
   #print(r.json())
   
-  r = requests.post('http://127.0.0.1:3000/api/notify', json = my_data)
+  r = requests.post('http://192.168.22.41/api/notify', json = my_data)
   #以上兩種寫法都可以，若用data = ，必須要包含header才會被判定為json，若用json=，則不需要轉檔案即可丟出。且在json=的狀態下，不能放json檔，一定要放非json的檔案，讓程式幫你自動轉換
   
   print(r.json())
@@ -120,11 +120,11 @@ def record():
   #my_data_json = json.dumps(my_data) 
   print(my_data)
     
-  #r = requests.post('http://127.0.0.1:3000/api/notify', data = my_data_json, headers = {"Content-Type":"application/json;charset=UTF-8"})
+  #r = requests.post('http://192.168.22.41/api/notify', data = my_data_json, headers = {"Content-Type":"application/json;charset=UTF-8"})
   #必加入header，否則會一直失敗
   #print(r.json())
   
-  r = requests.post('http://127.0.0.1:3000/api/voiceMsg', json = my_data)
+  r = requests.post('http://192.168.22.41/api/voiceMsg', json = my_data)
   #以上兩種寫法都可以，若用data = ，必須要包含header才會被判定為json，若用json=，則不需要轉檔案即可丟出。且在json=的狀態下，不能放json檔，一定要放非json的檔案，讓程式幫你自動轉換
   
   print(r.json())
