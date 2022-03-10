@@ -323,7 +323,7 @@ app.post('/api/voiceMsg', (req, res) => {
     let voice = req.body.voice;
 
     let m = new Date();
-    let now = m.getUTCFullYear() +"/"+ (m.getUTCMonth()+1) +"/"+ m.getUTCDate() + " " + m.getUTCHours() + ":" + m.getUTCMinutes() + ":" + m.getUTCSeconds();
+    let now = m.getFullYear() +"/"+ (m.getMonth()+1) +"/"+ m.getDate() + " " + m.getHours() + ":" + m.getMinutes() + ":" + m.getSeconds();
    
     //儲存檔案
     let photo_fileName = `data/${Date.now()}.jpg`;
@@ -352,7 +352,9 @@ app.post('/api/voiceMsg', (req, res) => {
       'userId': userId,
       'deviceId': deviceId,
     })
-
+    if(!_voiceMsgMap.has('2')){
+      _voiceMsgMap.set('2', []);
+    }
     _voiceMsgMap.get('2').push({
       "deviceId": deviceId,
       "voice_url": photo_fileName,
