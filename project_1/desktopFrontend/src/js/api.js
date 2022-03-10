@@ -145,3 +145,13 @@ function getLogs()
         data = res.data;
     return data;
 }
+function getVoiceMsgLogs()
+{
+    let data = [];
+    let token = getCookie('token');
+    let resText = httpGet("/api/voiceMsgLogs", {'Authorization': token});
+    let res = JSON.parse(resText);
+    if(Array.isArray(res.data))
+        data = res.data;
+    return data;
+}

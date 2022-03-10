@@ -24,7 +24,8 @@ const QRCode = require('qrcode');
 //
 const fs = require('fs'); 
 const path = require('path'); 
-const cors = require('cors')
+const cors = require('cors');
+const { getVoiceMsgs } = require('./dbHelper');
 
 
 //////////////////////////////////////////////////////////////////
@@ -110,11 +111,11 @@ app.post('/api/user/login', (req, res) => {
     //check user
     //let sha256_pwd = sha256(pwd + sha_salt);
     let userInfo = db.signIn(email, pwd);
- 
+    userInfo.id = userInfo.id + '';
     if(userInfo){
       // create token
       const token = 'Bearer ' + jwt.sign(userInfo, jwt_secret, {expiresIn: 3600 * 24 * 1});
-      data["id"] = userInfo.id + '';
+      data["id"] = userInfo.id;
       data["token"] = token;
       statusCode = 0;
       message = "Login success";
@@ -259,10 +260,32 @@ app.get('/api/voiceMsg', (req, res) => {
   let message = '';
   let data = [];
   try{
-    let userId = req.user.id;
+    let userId = req.user.id+'';
     if(_voiceMsgMap.has(userId)){
-      data = _voiceMsgMap.get(userId);
+      let msgs = _voiceMsgMap.get(userId);
+      while(msgs.length > 0){
+        let msg = msgs.pop();
+        data.push(msg);
+      }
     }
+    statusCode = 0;
+  }catch(e){
+    message = e.message;
+  }
+  let res_json = createResponseJson(statusCode, message, data);
+  res.status(200).json(res_json);
+});
+
+app.get('/api/voiceMsgLogs', (req, res) => {
+  let statusCode = -1;
+  let message = '';
+  let data = [];
+  try{
+    let userId = req.user.id + '';
+    let msgs = getVoiceMsgs(userId);
+    if(msgs)
+      data = msgs;
+    
     statusCode = 0;
   }catch(e){
     message = e.message;
@@ -276,7 +299,7 @@ app.post('/api/voiceMsg', (req, res) => {
   let message = '';
   let data = {};
   try{
-    let deviceId = req.body.deviceId;
+    let deviceId = req.body.deviceId+'';
     let userId = req.body.userId;
     let photo = req.body.photo;
     let voice = req.body.voice;
@@ -304,6 +327,13 @@ app.post('/api/voiceMsg', (req, res) => {
       "photo_url": voice_fileName,
       "timestamp": now,
     });
+    db.createVoiceMsg({
+      'time': now,
+      'photo_url': photo_fileName,
+      'voice_url': voice_fileName,
+      'userId': userId,
+      'deviceId': deviceId,
+    })
 
     statusCode = 0;
   }catch(e){

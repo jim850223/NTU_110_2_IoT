@@ -58,4 +58,19 @@ module.exports = {
         let rows = db.prepare("SELECT * FROM [logs] WHERE userId=@userId").all({userId: userId});
         return rows;
     },
+    createVoiceMsg: (data)=>{
+        //INSERT
+        db.prepare("INSERT INTO [voiceMessages] (time, photo_url, voice_url, userId, deviceId) VALUES (@time, @photo_url, @voice_url, @userId, @deviceId)")
+        .run({
+            time: data.time,
+            photo_url: data.photo_url,
+            voice_url: data.voice_url,
+            userId: data.userId,
+            deviceId: data.deviceId,
+        });
+    },
+    getVoiceMsgs: (userId)=>{
+        let rows = db.prepare("SELECT * FROM [voiceMessages] WHERE userId=@userId").all({userId: userId});
+        return rows;
+    },
 };
