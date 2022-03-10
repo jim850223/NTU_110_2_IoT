@@ -154,6 +154,8 @@
     var command_to_do;
     var command_parameters;
     var message;
+    var qr_code;
+    var url_to_backend_server = 'http://127.0.0.1:3000/'
 
     function call_Rpi_ring_bell() {
       const uri = `http://127.0.0.1:5000/bell`;
@@ -248,7 +250,8 @@
       if (command_to_do == 'recivePackage') {
         opendoor();
         document.getElementById("package_message").innerHTML = '請掃描QR Code';
-        document.getElementById("attr-value").innerHTML = '<img src="http://127.0.0.1:3000/qrcode/1646822028916.png" alt="Girl in a jacket" width="150" height="150">'
+        html_to_change = '<img src=' +qr_code + ' alt="Girl in a jacket" width="150" height="150">'
+        document.getElementById("attr-value").innerHTML = html_to_change
         await delay(15000);
         state = 0;
         document.getElementById("package_message").innerHTML = '您好，請問能怎麼協助您';
@@ -302,7 +305,7 @@
     
     function getDeviceCommand() {
       /* get the status from the server */
-      const uri = `http://127.0.0.1:3000/api/device/1/commands`;
+      const uri = url_to_backend_server + `api/device/1/commands`;
       //實際跑時的server
 
       //const uri = `http://127.0.0.1:5000/device/1/commands`;
@@ -316,8 +319,13 @@
           console.log(!result.data[0]);
           //沒有action時，!result.data[0]為true
           console.log(result.data);
+                    
           if (state == 0 && result.data[0]) {
             state = 1;
+            
+            qr_code = result.data[0].parameters.url;
+            //qrcode/1646884774239.png
+            qr_code = url_to_backend_server + qr_code
 
             command_to_do = result.data[0].action;
             console.log(command_to_do);
