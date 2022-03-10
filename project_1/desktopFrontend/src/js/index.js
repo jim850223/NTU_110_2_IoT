@@ -49,7 +49,6 @@ $(document).ready(function(c) {
     let notifys = getNotify();
     while(notifys.length > 0){
       let notify = notifys.pop();
-      debugger;
       currentDeviceId = notify.deviceId;
       switch(notify.type){
         case 'bell':

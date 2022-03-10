@@ -113,8 +113,8 @@ app.post('/api/user/login', (req, res) => {
     let pwd = req.body.password;
 
     //check user
-    //let sha256_pwd = sha256(pwd + sha_salt);
-    let userInfo = db.signIn(email, pwd);
+    let sha256_pwd = sha256(pwd + sha_salt);
+    let userInfo = db.signIn(email, sha256_pwd);
     userInfo.id = userInfo.id + '';
     if(userInfo){
       // create token
@@ -203,6 +203,7 @@ app.get('/api/notify', (req, res) => {
   let data = [];
   try{
     let userId = req.user.id + '';
+    console.log(userId);
     if(_notifyMap.has(userId)){
       let notifys = _notifyMap.get(userId);
       while(notifys.length > 0){
@@ -234,7 +235,6 @@ app.post('/api/notify', (req, res) => {
     let notifyType = req.body.type;
     let userId = req.body.userId + '';
     let photo = req.body.photo;
-
     let m = new Date();
     let now = m.getFullYear() +"/"+ (m.getMonth()+1) +"/"+ m.getDate() + " " + m.getHours() + ":" + m.getMinutes() + ":" + m.getSeconds();
    
