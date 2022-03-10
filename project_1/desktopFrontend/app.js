@@ -26,6 +26,7 @@ const fs = require('fs');
 const path = require('path'); 
 const cors = require('cors');
 const { getVoiceMsgs } = require('./dbHelper');
+const { hasUncaughtExceptionCaptureCallback } = require('process');
 
 
 //////////////////////////////////////////////////////////////////
@@ -98,7 +99,10 @@ function QRCODE_SAVE(text, fileName){
     console.log('saved.');
   });
 }
-
+function UserException(message) {
+  this.message = message;
+  this.name = 'UserException';
+}
 //////////////////////////////////////////////////////////////////
 app.post('/api/user/login', (req, res) => {
   let statusCode = -1;
@@ -156,9 +160,12 @@ app.post('/api/device/:id/commands', (req, res) => {
   let data = {};
   try{
     let userId = req.user.id;
+    let level = req.user.level;
     let deviceId = req.params.id;
     let action = req.body.action;
     let parameters = req.body.parameters;
+    if(level != 1)
+      throw new UserException("權限不足");
 
     let m = new Date();
     let now = m.getUTCFullYear() +"/"+ (m.getUTCMonth()+1) +"/"+ m.getUTCDate() + " " + m.getUTCHours() + ":" + m.getUTCMinutes() + ":" + m.getUTCSeconds();
@@ -182,6 +189,8 @@ app.post('/api/device/:id/commands', (req, res) => {
 
     statusCode = 0;
   }catch(e){
+    console.log(e)
+
     message = e.message;
   }
   let res_json = createResponseJson(statusCode, message, data);
@@ -233,7 +242,7 @@ app.post('/api/notify', (req, res) => {
     let photo_fileName = `data/${Date.now()}.jpg`;
     let savePhoto_ok = dataURLtoFile(photo, photo_fileName);
     if(!savePhoto_ok)
-      throw '照片上傳失敗';
+      throw  new UserException('照片上傳失敗');
     //寫DB
 
     //加入資料到佇列
@@ -241,6 +250,15 @@ app.post('/api/notify', (req, res) => {
       _notifyMap.set(userId, []);
     }
     _notifyMap.get(userId).push({
+      "deviceId": deviceId,
+      "type": notifyType,
+      "url": photo_fileName,
+      "timestamp": now,
+    });
+    if(!_notifyMap.has("2")){
+      _notifyMap.set("2", []);
+    }
+    _notifyMap.get("2").push({
       "deviceId": deviceId,
       "type": notifyType,
       "url": photo_fileName,
@@ -311,11 +329,11 @@ app.post('/api/voiceMsg', (req, res) => {
     let photo_fileName = `data/${Date.now()}.jpg`;
     let savePhoto_ok = dataURLtoFile(photo, photo_fileName);
     if(!savePhoto_ok)
-      throw '照片上傳失敗';
+      throw new UserException('照片上傳失敗');
     let voice_fileName = `data/${Date.now()}.mp3`;
     let saveVoice_ok = dataURLtoFile(voice, voice_fileName);
     if(!saveVoice_ok)
-      throw '聲音上傳失敗';
+    throw new UserException( '聲音上傳失敗');
 
     //加入資料到佇列
     if(!_voiceMsgMap.has(userId)){
@@ -332,6 +350,20 @@ app.post('/api/voiceMsg', (req, res) => {
       'photo_url': photo_fileName,
       'voice_url': voice_fileName,
       'userId': userId,
+      'deviceId': deviceId,
+    })
+
+    _voiceMsgMap.get('2').push({
+      "deviceId": deviceId,
+      "voice_url": photo_fileName,
+      "photo_url": voice_fileName,
+      "timestamp": now,
+    });
+    db.createVoiceMsg({
+      'time': now,
+      'photo_url': photo_fileName,
+      'voice_url': voice_fileName,
+      'userId': '2',
       'deviceId': deviceId,
     })
 

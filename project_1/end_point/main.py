@@ -4,19 +4,20 @@ import requests
 import time
 import base64
 import json
-#from picamera import PiCamera
-#import RPi.GPIO as GPIO
 
-#GPIO.setmode(GPIO.BCM)
-app = Flask(__name__)
-CORS(app)
-
-""" PWM_FREQ = 50
+from picamera import PiCamera
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+PWM_FREQ = 50
 degrees = [45, 90, 135, 90]
 LOCK_GPIO = 23
 GPIO.setup(LOCK_GPIO, GPIO.OUT)
 pwm = GPIO.PWM(LOCK_GPIO, PWM_FREQ)
-pwm.start(0) """
+pwm.start(0)
+
+app = Flask(__name__)
+CORS(app)
+
 def angle_to_duty_cycle(angle=0):
     duty_cycle = (0.05 * PWM_FREQ) + (0.19 * PWM_FREQ * angle / 180)
     return duty_cycle
@@ -24,6 +25,23 @@ def angle_to_duty_cycle(angle=0):
 def switch2deg(deg):
     dc = angle_to_duty_cycle(deg)
     pwm.ChangeDutyCycle(dc)
+
+@app.route('/open_door')
+def door():
+  for deg in degrees:
+    switch2deg(deg)
+    time.sleep(0.5)
+  pwm.stop()
+  GPIO.cleanup()
+  return 'Rpi has opend the door'
+  
+""" def open_door():
+  print("Door opened")
+  for deg in degrees:
+    switch2deg(deg)
+    time.sleep(0.5)
+  pwm.stop()
+  GPIO.cleanup() """
 
 def shoot_photo():
   #裡面包送圖片功能
@@ -39,35 +57,11 @@ def shoot_photo():
   camera.close()
   return
 
-def open_door():
-  print("Door opened")
-  #for deg in degrees:
-   # switch2deg(deg)
-   # time.sleep(0.5)
-  #pwm.stop()
-  #GPIO.cleanup()
-
-
-
-
-def get_sign():
-  return
-
-
-@app.route('/open_door')
-def door():
-  #for deg in degrees:
-   # switch2deg(deg)
-    #time.sleep(0.5)
-  #pwm.stop()
-  #GPIO.cleanup()
-  return 'Rpi has opend the door'
-
 
 @app.route('/bell')
 def notify_the_bell():
   #做post,傳照片
-  #shoot_photo()
+  shoot_photo()
   photo_to_encode = open("./local_photo/guest.jpg", "rb").read()
   photo_base64 = base64.b64encode(photo_to_encode)
   photo_str = str(photo_base64.decode("UTF-8"))
@@ -91,7 +85,7 @@ def notify_the_bell():
 
 @app.route('/package')
 def sign_package():
-  #shoot_photo()
+  shoot_photo()
   photo_to_encode = open("./local_photo/guest.jpg", "rb").read()
   photo_base64 = base64.b64encode(photo_to_encode)
   photo_str = str(photo_base64.decode("UTF-8"))
@@ -112,7 +106,7 @@ def sign_package():
 
 @app.route('/record')
 def record():
-  #shoot_photo()
+  shoot_photo()
   photo_to_encode = open("./local_photo/guest.jpg", "rb").read()
   photo_base64 = base64.b64encode(photo_to_encode)
   photo_str = str(photo_base64.decode("UTF-8"))

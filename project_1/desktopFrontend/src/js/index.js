@@ -1,5 +1,5 @@
 var _notifys = [];
-
+var currentDeviceId = '1';
 $(document).ready(function(c) {
   var notifyConfig = {
     body: '\\ ^o^ /', // 設定內容
@@ -25,20 +25,32 @@ $(document).ready(function(c) {
   let msg = document.getElementById('msg');
   btn_sendMsg.onclick = (e)=>{
     let selText = sel_msg.options[sel_msg.selectedIndex].text;
-    let ret = sendMessage(selText);
+    let ret = sendMessage(selText, currentDeviceId);
+    if(ret.status!=0){
+      alert(ret.message);
+    }
   }
-  btn_opendoor.onclick = openDoor;
+  btn_opendoor.onclick = ()=>{
+    let ret = openDoor(currentDeviceId);
+    if(ret.status!=0){
+      alert(ret.message);
+    }
+  }
   btn_recivePackage2.onclick = ()=>{
-    let ret = recivePackage();
+    let ret = recivePackage(currentDeviceId);
     btn_recivePackage1.disabled = true;
+    if(ret.status!=0){
+      alert(ret.message);
+    }
   } 
-
 
   //檢查notify
   let intervalID = setInterval(()=>{
     let notifys = getNotify();
     while(notifys.length > 0){
       let notify = notifys.pop();
+      debugger;
+      currentDeviceId = notify.deviceId;
       switch(notify.type){
         case 'bell':
           photo.src = `/${notify.url}`;

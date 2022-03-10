@@ -90,7 +90,7 @@ function login(data)
     setCookie('token', res.data.token, 1);
     return res;
 }
-function sendMessage(message)
+function sendMessage(message,deviceId)
 {
     let data = {
         "action": "setMessage",
@@ -99,29 +99,29 @@ function sendMessage(message)
         }
     };
     let token = getCookie('token');
-    let resText = httpPost("/api/device/1/commands", data, {'Authorization': token});
+    let resText = httpPost(`/api/device/${deviceId}/commands`, data, {'Authorization': token});
     let res = JSON.parse(resText);
     return res;
 }
-function openDoor()
+function openDoor(deviceId)
 {
     let data = {
         "action": "openDoor",
         "parameters": {}
     };
     let token = getCookie('token');
-    let resText = httpPost("/api/device/1/commands", data, {'Authorization': token});
+    let resText = httpPost(`/api/device/${deviceId}/commands`, data, {'Authorization': token});
     let res = JSON.parse(resText);
     return res;
 }
-function recivePackage()
+function recivePackage(deviceId)
 {
     let data = {
         "action": "recivePackage",
         "parameters": {}
     };
     let token = getCookie('token');
-    let resText = httpPost("/api/device/1/commands", data, {'Authorization': token});
+    let resText = httpPost(`/api/device/${deviceId}/commands`, data, {'Authorization': token});
     let res = JSON.parse(resText);
     return res;
 }
