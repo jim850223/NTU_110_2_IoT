@@ -1,6 +1,6 @@
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
+#import Adafruit_DHT
 from flask import Flask, render_template, request
-import Adafruit_DHT
 
 
 
@@ -14,9 +14,7 @@ def index():
 def test():
 	return str(Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, 4))
 
-@app.route(''):
-def page():
-	return 's'
+
 
 if __name__ == "__main__":
 	app.run(host='0.0.0.0', port=80, debug=True)

@@ -1,3 +1,9 @@
+body{
+    align-content: center;
+    width: 800px;
+    height: 600px;
+}
+
 #content{
     height:600px;
     width:699;
@@ -15,10 +21,18 @@
     text-align: center;
 }
 
+.toolButton{
+    float: right;
+    font-size: 35px;
+    border-radius: 10%;
+}
 
 
 #temperature, #wet{
     color: #70757a;
+    font-size: 35px;
+    font-family: monospace;
+
 }
 
 a {
