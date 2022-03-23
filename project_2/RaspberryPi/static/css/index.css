@@ -1,0 +1,26 @@
+#content{
+    height:600px;
+    width:699;
+    background:#ffffff;
+}
+
+#weatherWidget{
+    width:699px;
+    margin:auto;
+}
+
+#time{
+    font-size: 140px;
+    font-family: monospace;
+    text-align: center;
+}
+
+
+
+#temperature, #wet{
+    color: #70757a;
+}
+
+a {
+    pointer-events: none;
+}
