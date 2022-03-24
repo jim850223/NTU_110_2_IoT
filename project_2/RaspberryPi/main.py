@@ -1,8 +1,12 @@
-#import RPi.GPIO as GPIO
-#import Adafruit_DHT
 from flask import Flask, render_template, request
 import configparser
 
+#OS = 'PI'
+OS = 'WIN'
+
+if(OS == 'PI'):
+	import RPi.GPIO as GPIO
+	import Adafruit_DHT
 
 app = Flask(__name__)
 
@@ -15,8 +19,12 @@ def index():
 
 @app.route('/data/AM2302')
 def test():
-	# return str(Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, 4))
-	return str([20, 42])
+	wet = 30
+	temp = 27
+	if(OS == 'PI'):
+		data = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, 4)
+		return "[{wet:.2f}, {temp:.2f}]".format(wet=wet, temp=temp)
+	return str([wet, temp])
 
 @app.route('/config/<section>/<key>', methods=['GET'])
 def getConfig(section, key):

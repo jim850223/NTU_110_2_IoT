@@ -1,11 +1,10 @@
 body{
     align-content: center;
-    width: 800px;
-    height: 600px;
+    width: 750px;
+    height: 550px;
 }
 
 #content{
-    height:600px;
     width:699;
     background:#ffffff;
 }

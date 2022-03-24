@@ -24,8 +24,8 @@ function GetTempAndWet() {
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             let response = JSON.parse(this.responseText);
-            let temp = response[0];
-            let wet = response[1];
+            let wet = response[0];
+            let temp = response[1];
 
             let temperatureElm = document.getElementById("temperature");
             let wetElm = document.getElementById("wet");
