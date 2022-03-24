@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request
 import configparser
 
-#OS = 'PI'
-OS = 'WIN'
+OS = 'PI'
+#OS = 'WIN'
 
 if(OS == 'PI'):
 	import RPi.GPIO as GPIO
@@ -23,6 +23,8 @@ def test():
 	temp = 27
 	if(OS == 'PI'):
 		data = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, 4)
+		wet = data[0]
+		temp = data[1]
 		return "[{wet:.2f}, {temp:.2f}]".format(wet=wet, temp=temp)
 	return str([wet, temp])
 

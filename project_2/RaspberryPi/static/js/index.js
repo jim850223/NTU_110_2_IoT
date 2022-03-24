@@ -3,8 +3,6 @@ const config = {
 };
 
 $(function(){
-    
-    
     //更新時間
     setInterval(()=>{
         let now = new Date();
