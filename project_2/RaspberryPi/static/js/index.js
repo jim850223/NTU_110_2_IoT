@@ -31,7 +31,7 @@ function GetTempAndWet() {
             if(config['temperatureUnit'] == '1')
                 temperatureElm.innerText = `室內溫度: ${temp}°C`;
             else
-                temperatureElm.innerText = `室內溫度: ${temp * 9 / 5 + 32}°F`;
+                temperatureElm.innerText = `室內溫度: ${temp}°F`;
             wetElm.innerText = `室內濕度: ${wet}%`;
         }
     };     
