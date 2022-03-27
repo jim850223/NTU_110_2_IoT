@@ -1,0 +1,39 @@
+body{
+    align-content: center;
+    width: 720px;
+    height: 460px;
+}
+
+#content{
+    width:699;
+    background:#ffffff;
+}
+
+#weatherWidget{
+    width:699px;
+    margin:auto;
+}
+
+#time{
+    font-size: 140px;
+    font-family: monospace;
+    text-align: center;
+}
+
+.toolButton{
+    float: right;
+    font-size: 35px;
+    border-radius: 10%;
+}
+
+
+#temperature, #wet{
+    color: #70757a;
+    font-size: 35px;
+    font-family: monospace;
+
+}
+
+a {
+    pointer-events: none;
+}
