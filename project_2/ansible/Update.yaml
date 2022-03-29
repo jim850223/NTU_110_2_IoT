@@ -1,0 +1,30 @@
+---
+- name: Update firmware
+  hosts: pi
+  remote_user: pi
+  vars:
+    app_dir: /home/pi/Desktop/app
+
+  tasks:
+  - name: Check directory exists :{{app_dir}}
+    stat:
+      path: "{{app_dir}}"
+    register: register_name
+
+  - name: Creates directory :{{app_dir}}
+    file:
+      path: "{{app_dir}}"
+      state: directory
+    when: register_name.stat.exists == false
+
+  - name: Copy new version firmware to {{app_dir}}
+    copy:
+      src: app.ini
+      dest: "{{app_dir}}/app.ini"
+      backup: yes
+    register: file_app
+
+  - name: DEBUG
+    debug:
+      var: file_app
+
