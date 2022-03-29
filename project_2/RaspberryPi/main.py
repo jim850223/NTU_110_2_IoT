@@ -21,6 +21,9 @@ config = configparser.ConfigParser()
 @app.route('/')
 def index():
 	return render_template('index.html')
+@app.route('/startup')
+def startup():
+	return render_template('startup.html')
 
 @app.route('/data/AM2302')
 def test():
