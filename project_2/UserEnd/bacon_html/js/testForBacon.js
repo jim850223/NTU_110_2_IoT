@@ -1,3 +1,4 @@
+//0 stands for login state, 1 stands for online, 2 stands for  offline
 var piStatus = [];
 
 
@@ -44,7 +45,8 @@ async function getHttpResult(requestUrls) {
   let count = 1  
   for (let i = 0; i < requestUrls.length; i++) 
   try {{        
-    console.log(i+10);
+    piStatus[i] = 0;
+    console.log(piStatus[i])
     httpResponse[i] = await fetch(requestUrls[i], { method: 'GET' })
       .then(res => {
         return res.json();
@@ -53,13 +55,15 @@ async function getHttpResult(requestUrls) {
         <th scope="row">${count}</th>
         <td>${res.id}</td>
         <td>${res.ip}</td>
-        <td id = temp_${i+1}>${res.temp}</td>
         <td id = wet_${i+1}>${res.wet}</td>
+        <td id = temp_${i+1}>${res.temp}</td>
         <td id = appVer_${i+1}>${res.appVer}</td>
-        <td id = config_${i+1}>${res.configVer}</td>
+        <td id = configVer_${i+1}>${res.configVer}</td>
         <td id = time_${i+1}>${res.time}</td>        
         <td id = status_${i+1}>上線</td>        
         </tr>`
+        piStatus[i] = 1;
+        console.log(piStatus[i])
         count++;
       });}
   }catch (error) {     
@@ -75,43 +79,50 @@ async function printRequest() {
   let ips = await getIps();
   let transferRequest = await transferIpToRequestUrl(ips);
   let result = await getHttpResult(transferRequest);
+  setInterval(()=>{
+    refreshInfo(transferRequest)
+  }, 1000)
 }
 
-async function refreshInfo() {
-  let oneline = 0;
+
+
+
+
+async function refreshInfo(requestUrls) {     
+  let count = 1  
   let httpResponse = [];
-  let count = 1
   for (let i = 0; i < requestUrls.length; i++) 
   try {{
-    console.log(i+10);
     httpResponse[i] = await fetch(requestUrls[i], { method: 'GET' })
       .then(res => {
         return res.json();
       }).then(res => {
-        table.innerHTML += `<tr>
-        <th scope="row">${count}</th>
-        <td>${res.id}</td>
-        <td>${res.ip}</td>
-        <td>${res.configVer}</td>
-        <td>${res.appVer}</td>
-        <td>${res.temp}</td>
-        <td>${res.wet}</td>
-        <td>${res.time}</td>        
-        <td>上線中</td>        
-        </tr>`
+        document.getElementById(`wet_${i+1}`).innerHTML = `${res.wet}`;
+        document.getElementById(`temp_${i+1}`).innerHTML = `${res.temp}`;
+        document.getElementById(`appVer_${i+1}`).innerHTML = `${res.appVer}`;
+        document.getElementById(`configVer_${i+1}`).innerHTML = `${res.configVer}`;        
+        document.getElementById(`time_${i+1}`).innerHTML = `${res.time}`;
+        document.getElementById(`status_${i+1}`).innerHTML = `上線`;
         count++;
       });}
   }catch (error) {     
+    document.getElementById(`wet_${i+1}`).innerHTML = `斷線`;
+    document.getElementById(`temp_${i+1}`).innerHTML = `斷線`;
+    document.getElementById(`status_${i+1}`).innerHTML = `斷線`;
+    piStatus[i] = 2;
     console.log(`still something goes wrong, throw error to show page: ${error}`);
-  }
-  
+  }  
 }
 
-
+async function askForDetect() {
+  table.innerHTML ='';
+  let test = await getIpAPI();  
+  let ips = await getIps();
+  let transferRequest = await transferIpToRequestUrl(ips);
+  let result = await getHttpResult(transferRequest);  
+}
 
 printRequest();
-
-
 
 
 
