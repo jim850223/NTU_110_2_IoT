@@ -5,3 +5,15 @@
 ```
 ansible-playbook  Update.yaml -i inventory.ini
 ```
+### Work flow
+1. 檢查資料夾 
+ref: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/stat_module.html
+
+2. 建立資料夾
+ref: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
+
+3. 複製本地端檔案到遠端
+ref: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html
+
+4. 顯示DEBUG訊息
+ref:  https://docs.ansible.com/ansible/latest/collections/ansible/builtin/debug_module.html
