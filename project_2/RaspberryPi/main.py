@@ -6,8 +6,8 @@ from datetime import datetime
 #OS = 'PI'
 OS = 'WIN'
 
-_wet = 30
-_temp = 27
+_wet = 25
+_temp = 31
 
 if(OS == 'PI'):
 	import RPi.GPIO as GPIO
@@ -57,7 +57,7 @@ def setConfig():
 
 @app.route('/info', methods=['GET'])
 def getInfo():
-	id = "000123"
+	id = "000105"
 	configVer = "2"
 	appVer = "1.1"
 
