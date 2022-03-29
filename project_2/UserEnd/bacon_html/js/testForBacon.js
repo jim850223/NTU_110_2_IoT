@@ -1,16 +1,14 @@
 //0 stands for login state, 1 stands for online, 2 stands for  offline
 var piStatus = [];
 
-
-async function getIpAPI() {
+async function getIpsToFile() {
   await fetch('http://127.0.0.1:8080/api/v1/test', { method: "GET" })
     .then(result => {
       console.log(result);      
     })        
 }
 
-
-async function getIps() {
+async function getIpsFromFile() {
   return fetch("../finalIpList.txt")
     .then(response => {
       return response.text()
@@ -74,19 +72,15 @@ async function getHttpResult(requestUrls) {
 
 
 
-async function printRequest() {
-  let test = await getIpAPI();  
-  let ips = await getIps();
+async function initiateManager() {
+  await getIpsToFile();
+  let ips = await getIpsFromFile();
   let transferRequest = await transferIpToRequestUrl(ips);
-  let result = await getHttpResult(transferRequest);
+  await getHttpResult(transferRequest);
   setInterval(()=>{
     refreshInfo(transferRequest)
   }, 1000)
 }
-
-
-
-
 
 async function refreshInfo(requestUrls) {     
   let count = 1  
@@ -116,35 +110,10 @@ async function refreshInfo(requestUrls) {
 
 async function askForDetect() {
   table.innerHTML ='';
-  let test = await getIpAPI();  
-  let ips = await getIps();
+  await getIpsToFile();  
+  let ips = await getIpsFromFile();
   let transferRequest = await transferIpToRequestUrl(ips);
-  let result = await getHttpResult(transferRequest);  
+  await getHttpResult(transferRequest);  
 }
 
-printRequest();
-
-
-
-/* 
-var _notifys = [];
-
-$(document).ready(function (c) {
-  let table = document.getElementById('table');
-  let ips = getIps();
-
-  //Use ips to create http request combinations
-
-
-  for (let i = 0; i < logs.length; i++) {
-    let event = '按電鈴';
-    if (logs[i].event == 'bell')
-      event = '簽收包裹請求';
-    table.innerHTML += `<tr>
-    <th scope="row">${i + 1}</th>
-    <td>${logs[i].time}</td>
-    <td>${event}</td>
-    <td><img src="/${logs[i].url}" style="width:100%;height:100%;max-width:15rem"></img></td>
-  </tr>`;
-  }
-}) */
+initiateManager();
