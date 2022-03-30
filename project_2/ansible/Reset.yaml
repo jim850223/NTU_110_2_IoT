@@ -24,9 +24,15 @@
     unarchive:
       src: "{{factory_version_file}}"
       dest: "{{desktop_dir}}"
+    register: ret
 
   - name: Reboot
     reboot: 
     become: yes
+    when: ret == false
+
+  - name: Kill all python
+    command: sudo killall python
+
  
 

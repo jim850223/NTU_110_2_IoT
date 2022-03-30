@@ -1,7 +1,9 @@
+#coding:utf-8
 from flask import Flask, render_template, request, jsonify
 import configparser
 import socket
 from datetime import datetime
+import uuid
 
 #OS = 'PI'
 OS = 'WIN'
@@ -15,7 +17,7 @@ if(OS == 'PI'):
 
 app = Flask(__name__)
 
-config_fileNmae = 'config.ini'
+config_fileNmae = 'app.ini'
 config = configparser.ConfigParser()
 
 @app.route('/')
@@ -33,12 +35,14 @@ def test():
 		data = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, 4)
 		wet = data[0]
 		temp = data[1]
-	unit = getConfig('PUBLIC', 'name')
+	unit = getConfig('public', 'unit')
 	_wet = wet
 	_temp = temp
-	if unit == 1:
+	_unit = "°C"
+	if unit == '1':
 		_temp = _temp * 9 / 5 + 32
-	return "[{wet:.2f}, {temp:.2f}]".format(wet=wet, temp=temp)
+		_unit = "°F"
+	return "[{wet:.2f}, {temp:.2f}, \"{0}\"]".format(_unit, wet=_wet, temp=_temp )
 
 @app.route('/config/<section>/<key>', methods=['GET'])
 def getConfig(section, key):
@@ -57,11 +61,27 @@ def setConfig():
 		config.write(configfile)
 	return request.json
 
+@app.route('/version', methods=['GET'])
+def getVersion():
+	config.read('version.ini')
+	
+	return "[\"{0}\", \"{1}\"]".format(config["version"]["firmware"], config["version"]["config"] )
+
+@app.route('/version/add', methods=['GET'])
+def addVersion():
+	config.read('version.ini')
+	oldVer = int(config["version"]["config"])
+	config.set("version", "config", str(oldVer + 1) )
+	with open('version.ini', 'w') as configfile:
+		config.write(configfile)
+	return "{}".format(oldVer)
+
 @app.route('/info', methods=['GET'])
 def getInfo():
-	id = "000105"
-	configVer = "2"
-	appVer = "1.1"
+	config.read("version.ini")
+	id = getUUID()
+	configVer = config['version']['config']
+	appVer = config['version']['firmware']
 
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	s.connect(("8.8.8.8", 80))
@@ -70,17 +90,25 @@ def getInfo():
 
 	now = datetime.now()
 	current_time = now.strftime("%H:%M:%S")
-
+	
 	ret = {
 		"id": id,
 		"ip": ip,
+		"name": "LANT",
 		"configVer": configVer,
 		"appVer": appVer,
 		"time": current_time,
 		"wet": _wet,
-		"temp": _temp
+		"temp": _temp,
+		"devices": ['AM2302']
 	}
 	return jsonify(ret) 
+
+def getUUID():
+	uuid_ori = uuid.uuid3(uuid.NAMESPACE_DNS, 'ntu') 
+	uuid_int = str(uuid_ori.int) 
+	chkCode = (int(uuid_int[0:2]) + int(uuid_int[-2:])) % 23 
+	return "{0}-{1}".format(uuid_ori, chkCode) 
 
 
 if __name__ == "__main__":

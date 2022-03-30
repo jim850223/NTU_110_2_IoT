@@ -1,0 +1,35 @@
+---
+- name: Download config
+  hosts: pi
+  remote_user: pi
+  vars:
+    desktop_dir: /home/pi/Desktop
+    app_dir: /home/pi/Desktop/app
+    app_file: app.tar
+
+  tasks:
+  - name: Get UUID
+    uri:
+      url: "http://{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}/version/add"
+      return_content: yes
+      method: GET
+      body_format: json
+      status_code: 200
+    register: result
+    retries: 3
+    delay: 10
+
+  - command: "echo {{result.json | int + 1}}"
+    register: configVer
+  - debug: 
+      var: configVer.stdout
+    
+  - name: Backup
+    copy:
+      src: "{{app_dir}}/app.ini"
+      dest: "{{app_dir}}/app_{{result.json}}.ini"
+      remote_src: yes
+  - name: Upload
+    copy:
+      src: "app.ini"
+      dest: "{{app_dir}}/app.ini"

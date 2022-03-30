@@ -1,3 +1,4 @@
+#coding:utf-8
 from flask import Flask, render_template, request, jsonify
 import configparser
 import socket
@@ -65,6 +66,15 @@ def getVersion():
 	config.read('version.ini')
 	
 	return "[\"{0}\", \"{1}\"]".format(config["version"]["firmware"], config["version"]["config"] )
+
+@app.route('/version/add', methods=['GET'])
+def addVersion():
+	config.read('version.ini')
+	oldVer = int(config["version"]["config"])
+	config.set("version", "config", str(oldVer + 1) )
+	with open('version.ini', 'w') as configfile:
+		config.write(configfile)
+	return "{}".format(oldVer)
 
 @app.route('/info', methods=['GET'])
 def getInfo():
