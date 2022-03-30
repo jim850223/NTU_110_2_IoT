@@ -20,13 +20,10 @@ body{
     text-align: center;
 }
 
-.version{
-    color: #0a0fff;
-    font-size: 14px;
-    font-family: monospace;
-}
-.ver_group{
+.toolButton{
     float: right;
+    font-size: 35px;
+    border-radius: 10%;
 }
 
 
@@ -34,6 +31,7 @@ body{
     color: #70757a;
     font-size: 35px;
     font-family: monospace;
+
 }
 
 a {

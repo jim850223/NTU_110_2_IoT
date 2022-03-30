@@ -1,0 +1,19 @@
+---
+- name: Update firmware
+  hosts: pi
+  remote_user: pi
+  vars:
+    desktop_dir: /home/pi/Desktop
+    app_dir: /home/pi/Desktop/app
+    app_file: app.tar
+
+  tasks:
+  - name: TEST1
+    command: sudo python /home/pi/Desktop/app/main.py
+    poll: 0
+    async: 45
+  - name: Confirm that 200 OK response is returned
+    uri:
+      url: "http://127.0.0.1"
+      status_code: 200
+

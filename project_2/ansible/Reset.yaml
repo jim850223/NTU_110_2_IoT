@@ -1,0 +1,32 @@
+---
+- name: Reset default
+  hosts: pi
+  remote_user: pi
+  vars:
+    desktop_dir: /home/pi/Desktop
+    factory_version_file: factory.tar
+
+  tasks:
+  - name: Check factory version file exists :{{factory_version_file}}
+    stat:
+      path: "{{desktop_dir}}/{{factory_version_file}}"
+    register: ret
+
+  - name: Copy factory version firmware to {{desktop_dir}}
+    copy:
+      src: "{{factory_version_file}}"
+      dest: "{{desktop_dir}}/{{factory_version_file}}"
+      backup: yes
+      mode: '0777'
+    when: ret.stat.exists == false
+
+  - name: Extract {{factory_version_file}}
+    unarchive:
+      src: "{{factory_version_file}}"
+      dest: "{{desktop_dir}}"
+
+  - name: Reboot
+    reboot: 
+    become: yes
+ 
+
