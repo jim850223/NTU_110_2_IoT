@@ -3,28 +3,24 @@
   hosts: pi
   remote_user: pi
   vars:
-    app_dir: /home/pi/Desktop/app
+    desktop_dir: /home/pi/Desktop
+    app_file: app.tar
 
   tasks:
-  - name: Check directory exists :{{app_dir}}
-    stat:
-      path: "{{app_dir}}"
-    register: register_name
-
-  - name: Creates directory :{{app_dir}}
-    file:
-      path: "{{app_dir}}"
-      state: directory
-    when: register_name.stat.exists == false
-
-  - name: Copy new version firmware to {{app_dir}}
+  - name: Copy new version firmware to {{desktop_dir}}
     copy:
-      src: app.ini
-      dest: "{{app_dir}}/app.ini"
+      src: "{{app_file}}"
+      dest: "{{desktop_dir}}/{{app_file}}"
       backup: yes
+      mode: '0777'
     register: file_app
 
   - name: DEBUG
     debug:
       var: file_app
+
+  - name: Extract {{app_file}} => {{desktop_dir}}
+    unarchive:
+      src: "{{app_file}}"
+      dest: "{{desktop_dir}}"
 

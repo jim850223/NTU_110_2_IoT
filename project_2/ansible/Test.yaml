@@ -1,0 +1,17 @@
+---
+- name: Update firmware
+  hosts: pi
+  remote_user: pi
+  vars:
+    desktop_dir: /home/pi/Desktop
+    app_dir: /home/pi/Desktop/app
+    app_file: app.tar
+
+  tasks:
+  - name: TEST1
+    command: sudo python /home/pi/Desktop/app/main.py
+    poll: 0
+    async: 45
+  - name: TEST2
+    command: /home/pi/Desktop/app/auto.sh
+
