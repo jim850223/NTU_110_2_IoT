@@ -5,8 +5,8 @@ import socket
 from datetime import datetime
 import uuid
 
-OS = 'PI'
-#OS = 'WIN'
+#OS = 'PI'
+OS = 'WIN'
 _wet = 25
 _temp = 31
 
@@ -37,11 +37,12 @@ def test():
 	unit = getConfig('public', 'unit')
 	global _wet
 	global _temp
+	global _unit
 	_wet = wet
 	_temp = temp
 	_unit = "°C"
 	if unit == '1':
-		_temp = _temp * 9 / 5 + 32
+		_temp = temp * 9 / 5 + 32
 		_unit = "°F"
 	return "[{wet:.2f}, {temp:.2f}, \"{0}\"]".format(_unit, wet=_wet, temp=_temp )
 
