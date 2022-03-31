@@ -28,8 +28,19 @@ def startup():
 
 @app.route('/data/AM2302')
 def test():
+	unit_ini = getConfig('public', 'unit')
+	temp = 27
+	wet = 30
+	unit = "°C"
+	if unit_ini == '1':
+		temp = temp * 9 / 5 + 32
+		unit = "°F"
+	return "[{wet:.2f}, {temp:.2f}, \"{0}\"]".format(unit, wet=wet, temp=temp )
+
+def updateData():
 	wet = 30
 	temp = 27
+
 	if(OS == 'PI'):
 		data = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, 4)
 		wet = data[0]
@@ -46,7 +57,6 @@ def test():
 		_wet = wet
 		_temp = temp
 		_unit = "°C"
-		
 	return "[{wet:.2f}, {temp:.2f}, \"{0}\"]".format(_unit, wet=_wet, temp=_temp )
 
 @app.route('/config/<section>/<key>', methods=['GET'])
@@ -83,10 +93,14 @@ def addVersion():
 
 @app.route('/info', methods=['GET'])
 def getInfo():
-	global _wet
-	global _temp
-	if _wet == 25:
-		test()    
+	unit_ini = getConfig('public', 'unit')
+	temp = 27
+	wet = 30
+	unit = "°C"
+	if unit_ini == '1':
+		temp = temp * 9 / 5 + 32
+		unit = "°F"
+
 	config.read("version.ini")
 	id = _uuid
 	configVer = config['version']['config']
@@ -107,8 +121,8 @@ def getInfo():
 		"configVer": configVer,
 		"appVer": appVer,
 		"time": current_time,
-		"wet": _wet,
-		"temp": _temp,
+		"wet": wet,
+		"temp": temp,
 		"devices": ['AM2302']
 	}
 	return jsonify(ret) 
