@@ -38,12 +38,15 @@ def test():
 	global _wet
 	global _temp
 	global _unit
-	_wet = wet
-	_temp = temp
-	_unit = "°C"
+	
 	if unit == '1':
 		_temp = temp * 9 / 5 + 32
 		_unit = "°F"
+	else:
+		_wet = wet
+		_temp = temp
+		_unit = "°C"
+		
 	return "[{wet:.2f}, {temp:.2f}, \"{0}\"]".format(_unit, wet=_wet, temp=_temp )
 
 @app.route('/config/<section>/<key>', methods=['GET'])
@@ -81,6 +84,7 @@ def addVersion():
 @app.route('/info', methods=['GET'])
 def getInfo():
 	global _wet
+	global _temp
 	if _wet == 25:
 		test()    
 	config.read("version.ini")
