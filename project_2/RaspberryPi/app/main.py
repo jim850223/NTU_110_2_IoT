@@ -5,9 +5,8 @@ import socket
 from datetime import datetime
 import uuid
 
-#OS = 'PI'
-OS = 'WIN'
-
+OS = 'PI'
+#OS = 'WIN'
 _wet = 25
 _temp = 31
 
@@ -36,6 +35,8 @@ def test():
 		wet = data[0]
 		temp = data[1]
 	unit = getConfig('public', 'unit')
+	global _wet
+	global _temp
 	_wet = wet
 	_temp = temp
 	_unit = "°C"
@@ -78,8 +79,11 @@ def addVersion():
 
 @app.route('/info', methods=['GET'])
 def getInfo():
+	global _wet
+	if _wet == 25:
+		test()    
 	config.read("version.ini")
-	id = getUUID()
+	id = _uuid
 	configVer = config['version']['config']
 	appVer = config['version']['firmware']
 
@@ -105,11 +109,12 @@ def getInfo():
 	return jsonify(ret) 
 
 def getUUID():
-	uuid_ori = uuid.uuid3(uuid.NAMESPACE_DNS, 'ntu') 
+	uuid_ori = uuid.uuid4() 
 	uuid_int = str(uuid_ori.int) 
 	chkCode = (int(uuid_int[0:2]) + int(uuid_int[-2:])) % 23 
 	return "{0}-{1}".format(uuid_ori, chkCode) 
 
+_uuid = getUUID()
 
 if __name__ == "__main__":
 	app.run(host='0.0.0.0', port=80, debug=True)

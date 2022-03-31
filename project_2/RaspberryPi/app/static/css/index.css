@@ -12,6 +12,7 @@ body{
 #weatherWidget{
     width:699px;
     margin:auto;
+	display:none;
 }
 
 #time{

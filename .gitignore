@@ -2,3 +2,6 @@ project_1/desktopFrontend/node_modules
 project_1/desktopFrontend/data
 local_file/*
 .DS_Store
+project_2/RaspberryPi/.vscode/sftp.json
+project_2/RaspberryPi/autorun.sh
+project_2/RaspberryPi/autorun.sh
