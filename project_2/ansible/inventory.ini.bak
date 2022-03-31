@@ -1,0 +1,5 @@
+[web1]
+ansible-node1 ansible-connection=ssh ansible-user=vagrant
+ansible-node2 ansible-connection=ssh ansible-user=vagrant
+#pi@192.168.22.49
+#pi@192.168.22.37

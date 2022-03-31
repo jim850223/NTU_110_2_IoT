@@ -32,7 +32,7 @@ async function transferIpToRequestUrl(ips) {
   //http://192.168.22.49:80/info 
   for (let i = 0; i < ips.length - 1; i++) {
     request[i] = `http://${ips[i]}:80/info`
-    console.log(request[i])
+    //console.log(request[i])
   }
   return request;
 }
@@ -43,8 +43,7 @@ async function getHttpResult(requestUrls) {
   let count = 1  
   for (let i = 0; i < requestUrls.length; i++) 
   try {{        
-    piStatus[i] = 0;
-    console.log(piStatus[i])
+    piStatus[i] = 0;    
     httpResponse[i] = await fetch(requestUrls[i], { method: 'GET' })
       .then(res => {
         return res.json();
@@ -53,15 +52,18 @@ async function getHttpResult(requestUrls) {
         <th scope="row">${count}</th>
         <td>${res.id}</td>
         <td>${res.ip}</td>
-        <td id = wet_${i+1}>${res.wet}</td>
-        <td id = temp_${i+1}>${res.temp}</td>
-        <td id = appVer_${i+1}>${res.appVer}</td>
-        <td id = configVer_${i+1}>${res.configVer}</td>
-        <td id = time_${i+1}>${res.time}</td>        
-        <td id = status_${i+1}>上線</td>        
+        <td id = wet_${i}>${res.wet}</td>
+        <td id = temp_${i}>${res.temp}</td>
+        <td id = appVer_${i}>${res.appVer}</td>
+        <td id = configVer_${i}>${res.configVer}</td>
+        <td id = time_${i}>${res.time}</td>        
+        <td id = status_${i}>上線</td>
+        <td id = status_${i}><a class="btn btn-warning" onclick=askForUpdate_${i}() >版本更新</a></td>
+        <td id = status_${i}><a class="btn btn-warning" onclick=askForConfig_${i}() >組態更新</a></td>
+        <td id = status_${i}><a class="btn btn-warning" onclick=askForReset_${i}() >原廠設定</a></td>        
+
         </tr>`
         piStatus[i] = 1;
-        console.log(piStatus[i])
         count++;
       });}
   }catch (error) {     
@@ -69,7 +71,6 @@ async function getHttpResult(requestUrls) {
   }
   return httpResponse;
 }
-
 
 
 async function initiateManager() {
@@ -91,18 +92,18 @@ async function refreshInfo(requestUrls) {
       .then(res => {
         return res.json();
       }).then(res => {
-        document.getElementById(`wet_${i+1}`).innerHTML = `${res.wet}`;
-        document.getElementById(`temp_${i+1}`).innerHTML = `${res.temp}`;
-        document.getElementById(`appVer_${i+1}`).innerHTML = `${res.appVer}`;
-        document.getElementById(`configVer_${i+1}`).innerHTML = `${res.configVer}`;        
-        document.getElementById(`time_${i+1}`).innerHTML = `${res.time}`;
-        document.getElementById(`status_${i+1}`).innerHTML = `上線`;
+        document.getElementById(`wet_${i}`).innerHTML = `${res.wet}`;
+        document.getElementById(`temp_${i}`).innerHTML = `${res.temp}`;
+        document.getElementById(`appVer_${i}`).innerHTML = `${res.appVer}`;
+        document.getElementById(`configVer_${i}`).innerHTML = `${res.configVer}`;        
+        document.getElementById(`time_${i}`).innerHTML = `${res.time}`;
+        document.getElementById(`status_${i}`).innerHTML = `上線`;
         count++;
       });}
   }catch (error) {     
-    document.getElementById(`wet_${i+1}`).innerHTML = `斷線`;
-    document.getElementById(`temp_${i+1}`).innerHTML = `斷線`;
-    document.getElementById(`status_${i+1}`).innerHTML = `斷線`;
+    document.getElementById(`wet_${i}`).innerHTML = `斷線`;
+    document.getElementById(`temp_${i}`).innerHTML = `斷線`;
+    document.getElementById(`status_${i}`).innerHTML = `斷線`;
     piStatus[i] = 2;
     console.log(`still something goes wrong, throw error to show page: ${error}`);
   }  
@@ -110,10 +111,53 @@ async function refreshInfo(requestUrls) {
 
 async function askForDetect() {
   table.innerHTML ='';
-  await getIpsToFile();  
+  await getIpsToFile();
   let ips = await getIpsFromFile();
   let transferRequest = await transferIpToRequestUrl(ips);
   await getHttpResult(transferRequest);  
 }
+
+async function askForReset_0() {
+  await fetch('http://127.0.0.1:8080/api/v1/reset_0', { method: "GET" })
+    .then(result => {
+      console.log(result);      
+    }) 
+}
+
+async function askForReset_1() {
+  await fetch('http://127.0.0.1:8080/api/v1/reset_1', { method: "GET" })
+    .then(result => {
+      console.log(result);      
+    }) 
+}
+
+async function askForUpdate_0() {
+  await fetch('http://127.0.0.1:8080/api/v1/update_0', { method: "GET" })
+    .then(result => {
+      console.log(result);      
+    }) 
+}
+
+async function askForUpdate_1() {
+  await fetch('http://127.0.0.1:8080/api/v1/update_1', { method: "GET" })
+    .then(result => {
+      console.log(result);      
+    }) 
+}
+
+async function askForConfig_0() {
+  await fetch('http://127.0.0.1:8080/api/v1/config_0', { method: "GET" })
+    .then(result => {
+      console.log(result);      
+    }) 
+}
+
+async function askForConfig_1() {
+  await fetch('http://127.0.0.1:8080/api/v1/config_1', { method: "GET" })
+    .then(result => {
+      console.log(result);      
+    }) 
+}
+
 
 initiateManager();

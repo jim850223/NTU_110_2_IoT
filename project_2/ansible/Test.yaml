@@ -1,6 +1,6 @@
 ---
 - name: Update firmware
-  hosts: pi
+  hosts: pi_0
   remote_user: pi
   vars:
     desktop_dir: /home/pi/Desktop
