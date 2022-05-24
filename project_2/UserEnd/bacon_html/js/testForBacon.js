@@ -58,10 +58,9 @@ async function getHttpResult(requestUrls) {
         <td id = configVer_${i}>${res.configVer}</td>
         <td id = time_${i}>${res.time}</td>        
         <td id = status_${i}>上線</td>
-        <td id = status_${i}><a class="btn btn-warning" onclick=askForUpdate_${i}() >版本更新</a></td>
-        <td id = status_${i}><a class="btn btn-warning" onclick=askForConfig_${i}() >組態更新</a></td>
-        <td id = status_${i}><a class="btn btn-warning" onclick=askForReset_${i}() >原廠設定</a></td>        
-
+        <td id = update_${i}><a class="btn btn-warning" onclick=askForUpdate_${i}() >版本更新</a></td>
+        <td id = config_${i}><a class="btn btn-warning" onclick=askForConfig_${i}() >組態更新</a></td>
+        <td id = reset_${i}><a class="btn btn-warning" onclick=askForReset_${i}() >原廠設定</a></td>
         </tr>`
         piStatus[i] = 1;
         count++;
@@ -118,44 +117,56 @@ async function askForDetect() {
 }
 
 async function askForReset_0() {
+  document.getElementById(`reset_0`).innerHTML = `<a class="btn btn-light">恢復中</a>`
   await fetch('http://127.0.0.1:8080/api/v1/reset_0', { method: "GET" })
     .then(result => {
-      console.log(result);      
+      console.log(result);
+      document.getElementById(`reset_0`).innerHTML = `<a class="btn btn-warning">原廠設定</a>`      
     }) 
 }
 
 async function askForReset_1() {
+  document.getElementById(`reset_1`).innerHTML = `<a class="btn btn-light">恢復中</a>`
   await fetch('http://127.0.0.1:8080/api/v1/reset_1', { method: "GET" })
     .then(result => {
       console.log(result);      
+      document.getElementById(`reset_1`).innerHTML = `<a class="btn btn-warning">原廠設定</a>`
     }) 
 }
 
 async function askForUpdate_0() {
+  document.getElementById(`update_0`).innerHTML = `<a class="btn btn-light">更新中</a>`
   await fetch('http://127.0.0.1:8080/api/v1/update_0', { method: "GET" })
     .then(result => {
       console.log(result);      
+      document.getElementById(`update_0`).innerHTML = `<a class="btn btn-warning" onclick=askForUpdate_0() >版本更新</a>`
     }) 
 }
 
 async function askForUpdate_1() {
+  document.getElementById(`update_1`).innerHTML = `<a class="btn btn-light">更新中</a>`
   await fetch('http://127.0.0.1:8080/api/v1/update_1', { method: "GET" })
     .then(result => {
-      console.log(result);      
+      console.log(result);
+      document.getElementById(`update_1`).innerHTML = `<a class="btn btn-warning" onclick=askForUpdate_1() >版本更新</a>`
     }) 
 }
 
 async function askForConfig_0() {
+  document.getElementById(`config_0`).innerHTML = `<a class="btn btn-light">更新中</a>`
   await fetch('http://127.0.0.1:8080/api/v1/config_0', { method: "GET" })
     .then(result => {
       console.log(result);      
+      document.getElementById(`config_0`).innerHTML = `<a class="btn btn-warning">組態更新</a>`
     }) 
 }
 
 async function askForConfig_1() {
+  document.getElementById(`config_1`).innerHTML = `<a class="btn btn-light">更新中</a>`
   await fetch('http://127.0.0.1:8080/api/v1/config_1', { method: "GET" })
     .then(result => {
       console.log(result);      
+      document.getElementById(`config_1`).innerHTML = `<a class="btn btn-warning">組態更新</a>`
     }) 
 }
 

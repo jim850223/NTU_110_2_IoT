@@ -1,6 +1,6 @@
 #!/bin/bash
 
 
-cd ../ansible;sed -i '' "3s/.*/  hosts: pi_0/" Test.yaml
-ansible-playbook  Test.yaml -i inventory.ini
+cd ../ansible;sed -i '' "3s/.*/  hosts: pi_0/" Upload.yaml
+ansible-playbook  Upload.yaml -i inventory.ini
 

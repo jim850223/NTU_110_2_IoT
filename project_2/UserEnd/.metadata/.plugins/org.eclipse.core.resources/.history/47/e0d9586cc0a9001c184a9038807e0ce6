@@ -1,0 +1,19 @@
+package iot.project2.hello;
+
+
+
+@SpringBootApplication
+@Controller
+public class HelloApplication {
+	@GetMapping("user")
+	@ResponseBody
+	public String user(String name) {
+		return String.format("hello!%s!", name);
+	}
+	
+	
+	public static void main(String[] args) {
+		SpringApplication.run(HelloApplication.class, args);
+	}
+
+}
