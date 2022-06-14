@@ -4,11 +4,14 @@ from wifi import Cell, Scheme
 import json
 import csv
 
-position_index = input("Enter your position number(0~100):")
+#position_index = input("Enter your position number(0~100):")
+position_index = 0
 x = input("Enter the position at coordinate x:")
 y = input("Enter the position at coordinate y:")
-z = input("Enter the position at coordinate z:")
-collect_time = input("Enter the time you want to collect(0~100):")
+#z = input("Enter the position at coordinate z:")
+z = 2
+#collect_time = input("Enter the time you want to collect(0~100):")
+collect_time = 30
 raw_data = []
 selected_AP = {'00:11:32:9D:30:3A':4, '00:11:32:9D:30:3B':5,
                 '00:11:32:AD:8C:82':6, '00:11:32:AD:8C:83':7,
@@ -45,13 +48,13 @@ while True:
 		stop_time = time.time()
 		
 		if (stop_time - start_time)>float(collect_time):
-			csvfile.close()
 			break
 		if -90 in information:
 			print('-90 error')
 			break
 	except KeyboardInterrupt:
 		print('Hello user you have pressed ctrl-c button.')
+csvfile.close()
 	
 		
 		
