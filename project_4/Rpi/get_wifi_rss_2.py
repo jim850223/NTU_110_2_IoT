@@ -10,9 +10,9 @@ y = input("Enter the position at coordinate y:")
 z = input("Enter the position at coordinate z:")
 collect_time = input("Enter the time you want to collect(0~100):")
 raw_data = []
-selected_AP = {'00:11:32:9d:30:3a':4, '00:11:32:9d:30:3b':5,
-                '00:11:32:ad:8c:82':6, '00:11:32:ad:8c:83':7,
-                '00:11:32:ad:8e:b7':8, '00:11:32:ad:8e:b8':9,
+selected_AP = {'00:11:32:9D:30:3A':4, '00:11:32:9D:30:3B':5,
+                '00:11:32:AD:8C:82':6, '00:11:32:AD:8C:83':7,
+                '00:11:32:AD:8E:B7':8, '00:11:32:AD:8E:B8':9,
                 '00:11:32:9D:2B:30':10, '00:11:32:9D:2B:31':11,
 				}
 
