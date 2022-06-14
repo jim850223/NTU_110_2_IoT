@@ -43,9 +43,15 @@ while True:
 				information[index] = AP_SSID.signal
 		writer.writerow(information)
 		stop_time = time.time()
+		
 		if (stop_time - start_time)>float(collect_time):
 			csvfile.close()
 			break
+		if -90 in information:
+			print('-90 error')
+			break
 	except KeyboardInterrupt:
 		print('Hello user you have pressed ctrl-c button.')
+	
+		
 		
