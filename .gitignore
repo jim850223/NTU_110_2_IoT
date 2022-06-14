@@ -5,3 +5,5 @@ local_file/*
 project_2/RaspberryPi/.vscode/sftp.json
 project_2/RaspberryPi/autorun.sh
 project_2/RaspberryPi/autorun.sh
+project_4/*.csv
+
