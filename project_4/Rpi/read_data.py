@@ -54,15 +54,13 @@ if __name__ == '__main__':
     tmp_y = []
     while True:        
         try:
-            #os.system('sudo iwlist wlan0 scan')
-            #cell = Cell.all('wlan0')
-            information = [None, None, None, None, -90, -90, -90, -90, -90, -90, -90, -90, time.time()]
-            '''
+            os.system('sudo iwlist wlan0 scan')
+            cell = Cell.all('wlan0')
+            information = [None, None, None, None, -90, -90, -90, -90, -90, -90, -90, -90, time.time()]            
             for AP_SSID in cell:
               index = selected_AP.get(AP_SSID.address)
               if index is not None:
-                information[index] = AP_SSID.signal
-            '''
+                information[index] = AP_SSID.signal            
             prediction = knn(train_position, train_feature, np.array(information[4:12]), k=3)
             #print('Predicted X: %.4f, Y:%.4f, Z: %.f' % (prediction[0], prediction[1], prediction[2]))
             tmp_x.append(prediction[0])
