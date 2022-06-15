@@ -128,20 +128,13 @@ def get_result():
             prediction = knn(train_position, train_feature, np.array(information[4:12]), k=3)
             #print('Predicted X: %.4f, Y:%.4f, Z: %.f' % (prediction[0], prediction[1], prediction[2]))
             tmp_x.append(prediction[0])
-            tmp_x.append(prediction[1])
+            tmp_y.append(prediction[1])
             stop_time = time.time()
             if (stop_time - start_time)>float(collect_time):
               break
         except KeyboardInterrupt:
             print('Hello user you have pressed ctrl-c button.')
-    
-
-    tmp_x.append(1)
-    tmp_x.append(2)
-    tmp_x.append(3)
-    tmp_y.append(1)
-    tmp_y.append(2)
-    tmp_y.append(3)
+            
     average_x = Average(tmp_x)
     average_y = Average(tmp_y)
   
@@ -153,5 +146,5 @@ def get_result():
 
 
 
-app.run(port=5000)
+app.run(host='0.0.0.0', port=5000)
 
