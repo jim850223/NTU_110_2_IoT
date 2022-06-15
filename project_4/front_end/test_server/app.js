@@ -6,8 +6,8 @@ app.use(cors());
 
 app.get('/', (req, res) => {
   const test = {
-    x: 140,
-    y: 210
+    x: 8,
+    y: 4
   }  
 
   res.send(test)

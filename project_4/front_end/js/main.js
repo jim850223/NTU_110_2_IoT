@@ -1,6 +1,31 @@
+let the_real_width = 15;
+let the_data_width = 12;
+let x_from_data_to_real = the_real_width/the_data_width;
+let the_real_height = 8;
+let the_data_height = 6;
+let y_from_data_to_real = the_real_height/the_data_height;
+let canvas_width = 750;
+let canvas_height = 400;
+let x_on_the_canvas = x_from_data_to_real * canvas_width;
+let y_on_the_canvas = y_from_data_to_real * canvas_height;
+let server_ip = "192.168.22.37"
+
+function accSubtr(arg1,arg2){
+  var r1,r2,m,n;
+  try {
+      r1=arg1.toString().split(".")[1].length;
+  } catch(e){r1=0}
+  try {
+      r2=arg2.toString().split(".")[1].length;
+  } catch(e){r2=0}
+  m=Math.pow(10,Math.max(r1,r2));
+  n=(r1>=r2)?r1:r2;
+  return ((arg1*m-arg2*m)/m).toFixed(n);
+}
+
 function setup() {
-  //13 : 8 = 650 : 400
-  let myCanvas = createCanvas(650, 400);
+  //15 : 8 =  750 : 400 
+  let myCanvas = createCanvas(canvas_width, canvas_height);
   myCanvas.parent('myContainer');
 }
 
@@ -13,12 +38,12 @@ function draw() {
 
   ellipse(mouseX, mouseY, 20, 20);
   fill(0, 102, 153);
-  textSize(20);
-  ellipse(x, y, 20, 20);
-  text("    X: "+Math.round((x/width) * 13 * 100)/100+" Y: "+Math.round((y/height) * 8 * 100)/100,x, y);
-
-  text("    X: "+Math.round((mouseX/width) * 13 * 100)/100+" Y: "+Math.round((mouseY/height) * 8 * 100)/100,mouseX, mouseY);
-
+  textSize(16);
+  ellipse(width -(x* x_from_data_to_real/the_real_width * width), y* y_from_data_to_real/the_real_height * height, 20, 20);
+  let x_to_show = Math.round((x* x_from_data_to_real) * 100)/100
+  let mousex_to_show = accSubtr(15, Math.round((mouseX/width) * 15 * 100)/100)
+  text("    X: "+ x_to_show +" Y: "+Math.round((y * y_from_data_to_real) * 100)/100+" Z: 1.05",width - (x * x_from_data_to_real * (width/the_real_width)), y * y_from_data_to_real * (height/the_real_height));
+  text("    X: "+ mousex_to_show +" Y: "+Math.round((mouseY/height) * 8 * 100)/100,mouseX, mouseY);
 }
 
 var u = 40;
@@ -41,12 +66,17 @@ function grid() {
 
 function displayMousePosition() {
 	textFont('menlo');
-	textSize(14);
+	textSize(16);
 	noStroke();
-	text("x:" + Math.round((mouseX/width) * 13 * 100)/100, 10, 20);
-	text("y:" + Math.round((mouseY/height) * 8 * 100)/100, 10, 40);
-  //text("x:" + x, 10, 20);
-  //text("y:" + y, 10, 40);
+  //accSubtr(15, Math.round((mouseX/width) * 15 * 100)/100);
+  //let mousex_to_show = accSubtr(15, Math.round((mouseX/width) * 15 * 100)/100)
+  let x_to_show = Math.round((x* x_from_data_to_real) * 100)/100
+  let y_to_show = Math.round((y * y_from_data_to_real) * 100)/100
+  if (x) {
+    text("x:" + x_to_show, 10, 20);
+	  text("y:" + y_to_show, 10, 40);
+    text("z:" + 1.05, 10, 60);
+  }
   stroke('black'); // reset stroke
 }
 
@@ -55,7 +85,7 @@ let y;
 
 async function getPosition() {
   let result = await
-    fetch(`http://127.0.0.1:3000/`, { method: "GET" })
+    fetch(`http://${server_ip}:5000/`, { method: "GET" })
       .then(response => { 
         return(response.json());                                                        
       }).then(response => {
