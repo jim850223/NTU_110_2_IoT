@@ -15,6 +15,9 @@ selected_AP = {'00:11:32:9D:30:3A':4, '00:11:32:9D:30:3B':5,
 def euclidian_distance(a, b):
     return np.linalg.norm((a-b),2)
 
+def Average(lst):
+    return sum(lst) / len(lst)
+
 def knn(position, feature, input, k,):
 
     distance = np.array([euclidian_distance(feature[i], input) for i in range(feature.shape[0]-1)])
@@ -46,7 +49,10 @@ if __name__ == '__main__':
     train_position = np.array(train_position)
 
     #prediction
-    while True:
+    
+    tmp_x = []
+    tmp_y = []
+    while True:        
         try:
             #os.system('sudo iwlist wlan0 scan')
             #cell = Cell.all('wlan0')
@@ -58,9 +64,15 @@ if __name__ == '__main__':
                 information[index] = AP_SSID.signal
             '''
             prediction = knn(train_position, train_feature, np.array(information[4:12]), k=3)
-            print('Predicted X: %.4f, Y:%.4f, Z: %.f' % (prediction[0], prediction[1], prediction[2]))
+            #print('Predicted X: %.4f, Y:%.4f, Z: %.f' % (prediction[0], prediction[1], prediction[2]))
+            tmp_x.append(prediction[0])
+            tmp_x.append(prediction[1])
             stop_time = time.time()
             if (stop_time - start_time)>float(collect_time):
               break
         except KeyboardInterrupt:
             print('Hello user you have pressed ctrl-c button.')
+        
+    average_x = Average(tmp_x)
+    average_y = Average(tmp_y)
+    
